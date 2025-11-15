@@ -1,9 +1,0 @@
-{
-  "title": "Modern JavaScript Mastery",
-  "description": "Master advanced JavaScript concepts including closures, async programming, and modern ES6+ features.",
-  "order": ["closures-deep-dive", "promises-async-await"],
-  "items": {
-    "closures-deep-dive": "Closures and Lexical Scope Mastery",
-    "promises-async-await": "Promises and Async/Await Patterns"
-  }
-}
