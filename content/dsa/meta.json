@@ -1,0 +1,10 @@
+{
+  "title": "DSA Mastery Series",
+  "description": "Master Data Structures and Algorithms step-by-step with practical examples and comprehensive explanations.",
+  "order": ["recursion-basics", "recursion-advanced", "backtracking-fundamentals"],
+  "items": {
+    "recursion-basics": "Recursion Fundamentals",
+    "recursion-advanced": "Advanced Recursion Techniques", 
+    "backtracking-fundamentals": "Backtracking Fundamentals"
+  }
+}
