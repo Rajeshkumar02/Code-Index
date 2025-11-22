@@ -11,6 +11,8 @@ import { getSeriesInfo } from "@/lib/series";
 import ReadingProgress from "@/components/reading-progress";
 import ScrollToTop from "@/components/scroll-to-top";
 import ArticleTitleSetter from "@/components/article-title-setter";
+import ViewCounter from "@/components/view-counter";
+// import ReactionButtons from "@/components/reaction-buttons";
 
 // Convert MDX page data to plain objects for client components
 function convertToPlainData(post: any) {
@@ -130,6 +132,10 @@ export default async function Page(props: {
                 </div>
               </>
             )}
+
+            {/* View Counter */}
+            <span aria-hidden="true">•</span>
+            <ViewCounter slug={params?.slug?.join("/") || ""} />
           </dl>
         </div>
 
@@ -153,11 +159,16 @@ export default async function Page(props: {
             {seriesInfo && (
               <SeriesPlaylist seriesInfo={seriesInfo} />
             )}
-            
+
             {/* Article Content with Standard Typography */}
             <div className="prose ">
               <Mdx components={getMDXComponents()} />
             </div>
+
+            {/* Reaction Buttons */}
+            {/* <div className="flex justify-center mt-12 mb-8">
+              <ReactionButtons slug={params?.slug?.join("/") || ""} />
+            </div> */}
 
             {/* Series Navigation - Show after content if part of series */}
             {seriesInfo && (
