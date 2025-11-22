@@ -1,0 +1,809 @@
+---
+title: "Linked Lists in JavaScript - Connecting the Dots! 🔗"
+description: "Master Linked Lists with simple explanations! Learn singly and doubly linked lists, how to implement them, and solve real interview problems. Perfect for beginners."
+date: 2024-11-28
+author: "Code Index"
+category: "dsa"
+tags:
+  [
+    "javascript",
+    "linked-lists",
+    "data-structures",
+    "dsa",
+    "beginner",
+    "tutorial",
+    "interview-prep",
+    "pointers",
+  ]
+featured: true
+image: "/images/linked-lists.jpg"
+readingTime: "16 min read"
+series: "dsa-javascript"
+seriesOrder: 7
+---
+
+# Linked Lists - Connecting the Dots! 🔗
+
+## A Story to Start With...
+
+Imagine you're on a treasure hunt! Each clue tells you where the next clue is:
+
+```
+Clue 1: "Look under the big tree" → Points to Clue 2
+Clue 2: "Check the mailbox" → Points to Clue 3
+Clue 3: "Open the red box" → Points to Treasure!
+```
+
+You can't jump directly to Clue 3 - you have to follow the chain! This is exactly how a **Linked List** works! 🎯
+
+## What is a Linked List? (The Super Simple Version)
+
+A linked list is like a **chain of train cars**:
+
+```
+[Car 1] → [Car 2] → [Car 3] → [Car 4] → null
+  Data      Data      Data      Data
+```
+
+Each car (node) has:
+
+- **Data** - The actual value (like a passenger)
+- **Next** - A pointer to the next car (or null if it's the last car)
+
+## Linked List vs Array
+
+### Array - Like Numbered Lockers
+
+```javascript
+const array = ["A", "B", "C", "D"];
+//             0    1    2    3  ← Can jump to any index!
+
+console.log(array[2]); // "C" - Direct access!
+```
+
+**Pros:** Fast access by index  
+**Cons:** Fixed size, slow insertion/deletion in middle
+
+### Linked List - Like a Treasure Hunt
+
+```javascript
+// Can't jump to middle! Must follow the chain!
+Head → [A] → [B] → [C] → [D] → null
+
+// To get to C, must go: Head → A → B → C
+```
+
+**Pros:** Dynamic size, fast insertion/deletion  
+**Cons:** No direct access, must traverse from start
+
+## Creating a Linked List Node
+
+```javascript
+class Node {
+  constructor(data) {
+    this.data = data; // The value
+    this.next = null; // Pointer to next node
+  }
+}
+
+// Create nodes
+const node1 = new Node("A");
+const node2 = new Node("B");
+const node3 = new Node("C");
+
+// Connect them!
+node1.next = node2; // A → B
+node2.next = node3; // B → C
+
+// Now we have: A → B → C → null
+
+console.log(node1.data); // "A"
+console.log(node1.next.data); // "B"
+console.log(node1.next.next.data); // "C"
+```
+
+## Implementing a Singly Linked List
+
+```javascript
+class LinkedList {
+  constructor() {
+    this.head = null; // Start of the list
+    this.size = 0; // Number of nodes
+  }
+
+  // Add to the end
+  append(data) {
+    const newNode = new Node(data);
+
+    // If list is empty
+    if (!this.head) {
+      this.head = newNode;
+      this.size++;
+      return;
+    }
+
+    // Find the last node
+    let current = this.head;
+    while (current.next) {
+      current = current.next;
+    }
+
+    // Add new node at the end
+    current.next = newNode;
+    this.size++;
+  }
+
+  // Add to the beginning
+  prepend(data) {
+    const newNode = new Node(data);
+    newNode.next = this.head;
+    this.head = newNode;
+    this.size++;
+  }
+
+  // Insert at specific position
+  insertAt(data, index) {
+    if (index < 0 || index > this.size) {
+      return false;
+    }
+
+    // Insert at beginning
+    if (index === 0) {
+      this.prepend(data);
+      return true;
+    }
+
+    const newNode = new Node(data);
+    let current = this.head;
+    let previous = null;
+    let count = 0;
+
+    // Find position
+    while (count < index) {
+      previous = current;
+      current = current.next;
+      count++;
+    }
+
+    // Insert node
+    newNode.next = current;
+    previous.next = newNode;
+    this.size++;
+    return true;
+  }
+
+  // Remove from specific position
+  removeAt(index) {
+    if (index < 0 || index >= this.size) {
+      return null;
+    }
+
+    let current = this.head;
+
+    // Remove first node
+    if (index === 0) {
+      this.head = current.next;
+      this.size--;
+      return current.data;
+    }
+
+    let previous = null;
+    let count = 0;
+
+    // Find node to remove
+    while (count < index) {
+      previous = current;
+      current = current.next;
+      count++;
+    }
+
+    // Remove node
+    previous.next = current.next;
+    this.size--;
+    return current.data;
+  }
+
+  // Get data at index
+  getAt(index) {
+    if (index < 0 || index >= this.size) {
+      return null;
+    }
+
+    let current = this.head;
+    let count = 0;
+
+    while (count < index) {
+      current = current.next;
+      count++;
+    }
+
+    return current.data;
+  }
+
+  // Print the list
+  print() {
+    let current = this.head;
+    const values = [];
+
+    while (current) {
+      values.push(current.data);
+      current = current.next;
+    }
+
+    console.log(values.join(" → ") + " → null");
+  }
+
+  // Clear the list
+  clear() {
+    this.head = null;
+    this.size = 0;
+  }
+}
+
+// Let's use it!
+const list = new LinkedList();
+list.append("A");
+list.append("B");
+list.append("C");
+list.print(); // A → B → C → null
+
+list.prepend("Start");
+list.print(); // Start → A → B → C → null
+
+list.insertAt("Middle", 2);
+list.print(); // Start → A → Middle → B → C → null
+
+list.removeAt(2);
+list.print(); // Start → A → B → C → null
+```
+
+## Doubly Linked List - Two-Way Streets!
+
+A doubly linked list has pointers in BOTH directions:
+
+```
+null ← [A] ⇄ [B] ⇄ [C] ⇄ [D] → null
+```
+
+Each node has:
+
+- **Data** - The value
+- **Next** - Pointer to next node
+- **Prev** - Pointer to previous node
+
+```javascript
+class DoublyNode {
+  constructor(data) {
+    this.data = data;
+    this.next = null;
+    this.prev = null;
+  }
+}
+
+class DoublyLinkedList {
+  constructor() {
+    this.head = null;
+    this.tail = null;
+    this.size = 0;
+  }
+
+  // Add to end
+  append(data) {
+    const newNode = new DoublyNode(data);
+
+    if (!this.head) {
+      this.head = newNode;
+      this.tail = newNode;
+    } else {
+      newNode.prev = this.tail;
+      this.tail.next = newNode;
+      this.tail = newNode;
+    }
+
+    this.size++;
+  }
+
+  // Add to beginning
+  prepend(data) {
+    const newNode = new DoublyNode(data);
+
+    if (!this.head) {
+      this.head = newNode;
+      this.tail = newNode;
+    } else {
+      newNode.next = this.head;
+      this.head.prev = newNode;
+      this.head = newNode;
+    }
+
+    this.size++;
+  }
+
+  // Print forward
+  printForward() {
+    let current = this.head;
+    const values = [];
+
+    while (current) {
+      values.push(current.data);
+      current = current.next;
+    }
+
+    console.log("Forward: " + values.join(" ⇄ "));
+  }
+
+  // Print backward
+  printBackward() {
+    let current = this.tail;
+    const values = [];
+
+    while (current) {
+      values.push(current.data);
+      current = current.prev;
+    }
+
+    console.log("Backward: " + values.join(" ⇄ "));
+  }
+}
+
+// Let's use it!
+const dList = new DoublyLinkedList();
+dList.append("A");
+dList.append("B");
+dList.append("C");
+
+dList.printForward(); // Forward: A ⇄ B ⇄ C
+dList.printBackward(); // Backward: C ⇄ B ⇄ A
+```
+
+## Real-World Examples
+
+### 1. Browser History (Back/Forward)
+
+```javascript
+class BrowserHistory {
+  constructor() {
+    this.list = new DoublyLinkedList();
+    this.current = null;
+  }
+
+  visit(url) {
+    this.list.append(url);
+    this.current = this.list.tail;
+    console.log(`Visiting: ${url}`);
+  }
+
+  back() {
+    if (this.current && this.current.prev) {
+      this.current = this.current.prev;
+      console.log(`Back to: ${this.current.data}`);
+    } else {
+      console.log("No previous page!");
+    }
+  }
+
+  forward() {
+    if (this.current && this.current.next) {
+      this.current = this.current.next;
+      console.log(`Forward to: ${this.current.data}`);
+    } else {
+      console.log("No next page!");
+    }
+  }
+}
+```
+
+### 2. Music Playlist
+
+```javascript
+class Playlist {
+  constructor() {
+    this.list = new LinkedList();
+    this.current = null;
+  }
+
+  addSong(song) {
+    this.list.append(song);
+    if (!this.current) {
+      this.current = this.list.head;
+    }
+  }
+
+  next() {
+    if (this.current && this.current.next) {
+      this.current = this.current.next;
+      console.log(`Now playing: ${this.current.data}`);
+    } else {
+      console.log("End of playlist!");
+    }
+  }
+
+  currentSong() {
+    return this.current ? this.current.data : "No song playing";
+  }
+}
+
+const playlist = new Playlist();
+playlist.addSong("Song 1");
+playlist.addSong("Song 2");
+playlist.addSong("Song 3");
+
+console.log(playlist.currentSong()); // Song 1
+playlist.next(); // Now playing: Song 2
+playlist.next(); // Now playing: Song 3
+```
+
+## Common Linked List Patterns
+
+### Pattern 1: Reverse a Linked List
+
+```javascript
+function reverseList(head) {
+  let prev = null;
+  let current = head;
+
+  while (current) {
+    const nextTemp = current.next; // Save next
+    current.next = prev; // Reverse pointer
+    prev = current; // Move prev forward
+    current = nextTemp; // Move current forward
+  }
+
+  return prev; // New head
+}
+
+// Visual:
+// Before: 1 → 2 → 3 → null
+// After:  3 → 2 → 1 → null
+```
+
+### Pattern 2: Find Middle Node
+
+```javascript
+function findMiddle(head) {
+  let slow = head;
+  let fast = head;
+
+  // Fast moves 2x speed of slow
+  while (fast && fast.next) {
+    slow = slow.next;
+    fast = fast.next.next;
+  }
+
+  return slow; // Slow is at middle!
+}
+
+// Visual:
+// 1 → 2 → 3 → 4 → 5
+//         ↑
+//       Middle
+```
+
+### Pattern 3: Detect Cycle
+
+```javascript
+function hasCycle(head) {
+  let slow = head;
+  let fast = head;
+
+  while (fast && fast.next) {
+    slow = slow.next;
+    fast = fast.next.next;
+
+    if (slow === fast) {
+      return true; // Cycle detected!
+    }
+  }
+
+  return false;
+}
+```
+
+### Pattern 4: Merge Two Sorted Lists
+
+```javascript
+function mergeSorted(l1, l2) {
+  const dummy = new Node(0);
+  let current = dummy;
+
+  while (l1 && l2) {
+    if (l1.data < l2.data) {
+      current.next = l1;
+      l1 = l1.next;
+    } else {
+      current.next = l2;
+      l2 = l2.next;
+    }
+    current = current.next;
+  }
+
+  // Attach remaining nodes
+  current.next = l1 || l2;
+
+  return dummy.next;
+}
+```
+
+### Pattern 5: Remove Nth Node from End
+
+```javascript
+function removeNthFromEnd(head, n) {
+  const dummy = new Node(0);
+  dummy.next = head;
+
+  let first = dummy;
+  let second = dummy;
+
+  // Move first n+1 steps ahead
+  for (let i = 0; i <= n; i++) {
+    first = first.next;
+  }
+
+  // Move both until first reaches end
+  while (first) {
+    first = first.next;
+    second = second.next;
+  }
+
+  // Remove node
+  second.next = second.next.next;
+
+  return dummy.next;
+}
+```
+
+## Practice Challenges! 🎮
+
+### Challenge 1: Delete Node
+
+Delete a node from a linked list (given only that node)!
+
+```javascript
+function deleteNode(node) {
+  // Your code here!
+  // Hint: Copy next node's data!
+}
+
+// Example:
+// List: 1 → 2 → 3 → 4
+// Delete node with value 3
+// Result: 1 → 2 → 4
+```
+
+<details>
+<summary>Click to see the answer!</summary>
+
+```javascript
+function deleteNode(node) {
+  // Copy next node's data
+  node.data = node.next.data;
+  // Skip next node
+  node.next = node.next.next;
+}
+```
+
+</details>
+
+### Challenge 2: Palindrome Check
+
+Check if a linked list is a palindrome!
+
+```javascript
+function isPalindrome(head) {
+  // Your code here!
+  // Hint: Find middle, reverse second half, compare!
+}
+
+// Example:
+// 1 → 2 → 2 → 1 → true
+// 1 → 2 → 3 → false
+```
+
+<details>
+<summary>Click to see the answer!</summary>
+
+```javascript
+function isPalindrome(head) {
+  if (!head || !head.next) return true;
+
+  // Find middle
+  let slow = head;
+  let fast = head;
+
+  while (fast && fast.next) {
+    slow = slow.next;
+    fast = fast.next.next;
+  }
+
+  // Reverse second half
+  let prev = null;
+  while (slow) {
+    const temp = slow.next;
+    slow.next = prev;
+    prev = slow;
+    slow = temp;
+  }
+
+  // Compare
+  let left = head;
+  let right = prev;
+
+  while (right) {
+    if (left.data !== right.data) return false;
+    left = left.next;
+    right = right.next;
+  }
+
+  return true;
+}
+```
+
+</details>
+
+### Challenge 3: Remove Duplicates
+
+Remove duplicates from a sorted linked list!
+
+```javascript
+function removeDuplicates(head) {
+  // Your code here!
+}
+
+// Example:
+// 1 → 1 → 2 → 3 → 3 → null
+// Result: 1 → 2 → 3 → null
+```
+
+<details>
+<summary>Click to see the answer!</summary>
+
+```javascript
+function removeDuplicates(head) {
+  let current = head;
+
+  while (current && current.next) {
+    if (current.data === current.next.data) {
+      current.next = current.next.next;
+    } else {
+      current = current.next;
+    }
+  }
+
+  return head;
+}
+```
+
+</details>
+
+## Time Complexity Comparison
+
+| Operation               | Array | Linked List    |
+| ----------------------- | ----- | -------------- |
+| **Access**              | O(1)  | O(n)           |
+| **Search**              | O(n)  | O(n)           |
+| **Insert at beginning** | O(n)  | O(1)           |
+| **Insert at end**       | O(1)  | O(n) or O(1)\* |
+| **Delete at beginning** | O(n)  | O(1)           |
+| **Delete at end**       | O(1)  | O(n)           |
+
+\*O(1) if we maintain a tail pointer
+
+## Singly vs Doubly Linked List
+
+| Feature       | Singly             | Doubly                    |
+| ------------- | ------------------ | ------------------------- |
+| **Memory**    | Less (1 pointer)   | More (2 pointers)         |
+| **Traversal** | One direction      | Both directions           |
+| **Deletion**  | Need previous node | Can delete with just node |
+| **Use When**  | Forward only       | Need backward navigation  |
+
+## Common Mistakes to Avoid! ⚠️
+
+### Mistake 1: Losing Reference to Head
+
+```javascript
+// ❌ Wrong - lost the head!
+let current = head;
+head = head.next; // Lost first node!
+
+// ✅ Right - keep head safe
+let current = head;
+while (current) {
+  current = current.next;
+}
+```
+
+### Mistake 2: Not Handling Empty List
+
+```javascript
+// ❌ Wrong - crashes if empty
+function getFirst(head) {
+  return head.data; // Error if head is null!
+}
+
+// ✅ Right - check first
+function getFirst(head) {
+  if (!head) return null;
+  return head.data;
+}
+```
+
+### Mistake 3: Infinite Loop
+
+```javascript
+// ❌ Wrong - infinite loop if there's a cycle
+let current = head;
+while (current) {
+  current = current.next; // Never ends if cycle!
+}
+
+// ✅ Right - use cycle detection first
+if (!hasCycle(head)) {
+  let current = head;
+  while (current) {
+    current = current.next;
+  }
+}
+```
+
+## Key Takeaways! 🎯
+
+1. **Linked lists are chains** - Each node points to next
+2. **Dynamic size** - Can grow/shrink easily
+3. **No random access** - Must traverse from start
+4. **Great for insertions** - O(1) at beginning
+5. **Two types** - Singly (one direction) and Doubly (both directions)
+6. **Common in interviews** - Practice the patterns!
+
+## Quick Reference Card 📋
+
+```javascript
+// Node
+class Node {
+  constructor(data) {
+    this.data = data;
+    this.next = null;
+  }
+}
+
+// Linked List Operations
+list.append(data); // Add to end
+list.prepend(data); // Add to beginning
+list.insertAt(data, i); // Insert at position
+list.removeAt(i); // Remove at position
+list.getAt(i); // Get data at position
+list.print(); // Display list
+
+// Common Patterns
+reverseList(head); // Reverse
+findMiddle(head); // Find middle
+hasCycle(head); // Detect cycle
+mergeSorted(l1, l2); // Merge two lists
+removeNth(head, n); // Remove nth from end
+```
+
+## Congratulations! 🎉
+
+You've completed **7 episodes** of the DSA with JavaScript series!
+
+You now understand:
+
+- ✅ Introduction to DSA
+- ✅ Arrays
+- ✅ Strings
+- ✅ Objects & Hash Maps
+- ✅ Sets
+- ✅ Stacks & Queues
+- ✅ Linked Lists
+
+**You're ready for more advanced topics!** 🚀
+
+---
+
+_This is Episode 7 of the "Mastering DSA with JavaScript" series._
+
+**Previous Episode:** [Stacks & Queues →](./06-stacks-queues)
+
+**Next Episode:** Trees & Binary Search Trees - Hierarchical Data! →
+
+**Questions?** Drop a comment below! 💬

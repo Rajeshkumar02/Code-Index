@@ -1,0 +1,18 @@
+{
+  "title": "Mastering DSA with JavaScript",
+  "description": "A complete beginner-friendly series on Data Structures and Algorithms using JavaScript. Learn DSA concepts explained like you're 5, with real-world examples, interactive code, and interview preparation.",
+  "icon": "BookOpenText",
+  "defaultOpen": true,
+  "pages": [
+    "01-introduction-to-dsa",
+    "02-arrays-fundamentals",
+    "03-strings-manipulation",
+    "04-objects-hashmaps",
+    "05-sets-javascript",
+    "06-stacks-queues",
+    "07-linked-lists",
+    "08-trees-bst",
+    "09-recursion-basics",
+    "10-two-pointers-sliding-window"
+  ]
+}

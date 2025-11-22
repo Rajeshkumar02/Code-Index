@@ -2,7 +2,7 @@ import { source } from "@/lib/source";
 import { notFound } from "next/navigation";
 import BlogCard from "@/components/blog-card";
 import Link from "next/link";
-import { ArrowLeft, User, BookOpen } from "lucide-react";
+import { ChevronLeft, CircleUser, BookOpenText } from "lucide-react";
 import {
   safeDecodeURIComponent,
   safeEncodeURIComponent,
@@ -88,7 +88,7 @@ export default async function AuthorPage({ params }: AuthorPageProps) {
             href="/"
             className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
           >
-            <ArrowLeft className="h-4 w-4" />
+            <ChevronLeft className="h-4 w-4" />
             Back to Home
           </Link>
         </div>
@@ -101,10 +101,10 @@ export default async function AuthorPage({ params }: AuthorPageProps) {
             {/* Author Avatar */}
             <div className="relative">
               <div className="w-16 h-16 rounded-full bg-linear-to-br from-primary/20 via-primary/10 to-transparent border-2 border-primary/20 flex items-center justify-center">
-                <User className="h-7 w-7 text-primary" />
+                <CircleUser className="h-7 w-7 text-primary" />
               </div>
               <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-primary rounded-full flex items-center justify-center">
-                <BookOpen className="h-3 w-3 text-primary-foreground" />
+                <BookOpenText className="h-3 w-3 text-primary-foreground" />
               </div>
             </div>
 

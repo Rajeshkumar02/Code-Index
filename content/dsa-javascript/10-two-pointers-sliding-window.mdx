@@ -1,0 +1,700 @@
+---
+title: "Two Pointers & Sliding Window - Efficient Array Techniques! 🎯"
+description: "Master Two Pointers and Sliding Window patterns! Learn these powerful techniques to solve array problems efficiently. Perfect for coding interviews."
+date: 2024-12-01
+author: "Code Index"
+category: "dsa"
+tags:
+  [
+    "javascript",
+    "two-pointers",
+    "sliding-window",
+    "algorithms",
+    "dsa",
+    "interview-prep",
+    "array-techniques",
+    "optimization",
+  ]
+featured: true
+image: "/images/two-pointers-sliding-window.jpg"
+readingTime: "16 min read"
+series: "dsa-javascript"
+seriesOrder: 10
+---
+
+# Two Pointers & Sliding Window - Efficient Array Techniques! 🎯
+
+## A Story to Start With...
+
+### Two Pointers Story - Finding a Pair
+
+Imagine you're at a party with people lined up by height (shortest to tallest). You need to find two people whose combined height is exactly 12 feet.
+
+**Smart approach:**
+
+- Start with the shortest person (left pointer) and tallest person (right pointer)
+- If their combined height is too small, move left pointer right (get taller person)
+- If their combined height is too big, move right pointer left (get shorter person)
+- Keep going until you find the perfect pair!
+
+**This is the Two Pointers technique!** 🎯
+
+### Sliding Window Story - Finding Best View
+
+Imagine you're looking through a window at a beautiful street. You can only see 3 houses at a time through your window. You want to find which 3 consecutive houses have the most flowers.
+
+Instead of counting flowers for every possible set of 3 houses, you:
+
+- Count flowers in first 3 houses
+- Slide window one house to the right
+- Remove the house that left, add the new house that entered
+- Much faster!
+
+**This is the Sliding Window technique!** 🪟
+
+## Two Pointers Pattern
+
+### What is Two Pointers?
+
+Use **two pointers** (indexes) to traverse an array, usually from different positions.
+
+**Common scenarios:**
+
+- One pointer at start, one at end (opposite ends)
+- Both pointers at start (same direction)
+- One slow, one fast (different speeds)
+
+### Pattern 1: Opposite Ends
+
+**Problem:** Find two numbers that sum to target (in sorted array)
+
+```javascript
+function twoSum(arr, target) {
+  let left = 0;
+  let right = arr.length - 1;
+
+  while (left < right) {
+    const sum = arr[left] + arr[right];
+
+    if (sum === target) {
+      return [left, right]; // Found it!
+    } else if (sum < target) {
+      left++; // Need bigger sum
+    } else {
+      right--; // Need smaller sum
+    }
+  }
+
+  return null; // Not found
+}
+
+const numbers = [1, 2, 3, 4, 6, 8, 10];
+console.log(twoSum(numbers, 10)); // [1, 5] (2 + 8 = 10)
+```
+
+**Visual:**
+
+```
+[1, 2, 3, 4, 6, 8, 10]
+ ↑                 ↑
+left             right
+
+Sum = 1 + 10 = 11 (too big)
+Move right left
+
+[1, 2, 3, 4, 6, 8, 10]
+ ↑              ↑
+left          right
+
+Sum = 1 + 8 = 9 (too small)
+Move left right
+
+[1, 2, 3, 4, 6, 8, 10]
+    ↑           ↑
+   left       right
+
+Sum = 2 + 8 = 10 ✓ Found!
+```
+
+### Pattern 2: Same Direction (Fast & Slow)
+
+**Problem:** Remove duplicates from sorted array
+
+```javascript
+function removeDuplicates(arr) {
+  if (arr.length === 0) return 0;
+
+  let slow = 0; // Points to last unique element
+
+  for (let fast = 1; fast < arr.length; fast++) {
+    if (arr[fast] !== arr[slow]) {
+      slow++;
+      arr[slow] = arr[fast];
+    }
+  }
+
+  return slow + 1; // Length of unique elements
+}
+
+const numbers = [1, 1, 2, 2, 2, 3, 4, 4, 5];
+const length = removeDuplicates(numbers);
+console.log(numbers.slice(0, length)); // [1, 2, 3, 4, 5]
+```
+
+**Visual:**
+
+```
+[1, 1, 2, 2, 2, 3, 4, 4, 5]
+ ↑  ↑
+ s  f
+
+arr[f] === arr[s], skip
+
+[1, 1, 2, 2, 2, 3, 4, 4, 5]
+ ↑     ↑
+ s     f
+
+arr[f] !== arr[s], move s and copy
+[1, 2, 2, 2, 2, 3, 4, 4, 5]
+    ↑  ↑
+    s  f
+
+Continue until end...
+```
+
+### Pattern 3: Palindrome Check
+
+**Problem:** Check if string is a palindrome
+
+```javascript
+function isPalindrome(str) {
+  // Clean string (remove non-alphanumeric, lowercase)
+  const cleaned = str.toLowerCase().replace(/[^a-z0-9]/g, "");
+
+  let left = 0;
+  let right = cleaned.length - 1;
+
+  while (left < right) {
+    if (cleaned[left] !== cleaned[right]) {
+      return false;
+    }
+    left++;
+    right--;
+  }
+
+  return true;
+}
+
+console.log(isPalindrome("A man, a plan, a canal: Panama")); // true
+console.log(isPalindrome("race a car")); // false
+```
+
+### Pattern 4: Container With Most Water
+
+**Problem:** Find two lines that form container with most water
+
+```javascript
+function maxArea(heights) {
+  let left = 0;
+  let right = heights.length - 1;
+  let maxArea = 0;
+
+  while (left < right) {
+    // Calculate area
+    const width = right - left;
+    const height = Math.min(heights[left], heights[right]);
+    const area = width * height;
+
+    maxArea = Math.max(maxArea, area);
+
+    // Move pointer with smaller height
+    if (heights[left] < heights[right]) {
+      left++;
+    } else {
+      right--;
+    }
+  }
+
+  return maxArea;
+}
+
+const heights = [1, 8, 6, 2, 5, 4, 8, 3, 7];
+console.log(maxArea(heights)); // 49
+```
+
+## Sliding Window Pattern
+
+### What is Sliding Window?
+
+Maintain a **window** (subarray) and slide it through the array to find optimal solution.
+
+**Types:**
+
+- **Fixed size** - Window size stays constant
+- **Variable size** - Window size changes based on conditions
+
+### Pattern 1: Fixed Window - Maximum Sum
+
+**Problem:** Find maximum sum of k consecutive elements
+
+```javascript
+function maxSumSubarray(arr, k) {
+  if (arr.length < k) return null;
+
+  // Calculate sum of first window
+  let windowSum = 0;
+  for (let i = 0; i < k; i++) {
+    windowSum += arr[i];
+  }
+
+  let maxSum = windowSum;
+
+  // Slide the window
+  for (let i = k; i < arr.length; i++) {
+    windowSum = windowSum - arr[i - k] + arr[i]; // Remove left, add right
+    maxSum = Math.max(maxSum, windowSum);
+  }
+
+  return maxSum;
+}
+
+const numbers = [2, 1, 5, 1, 3, 2];
+console.log(maxSumSubarray(numbers, 3)); // 9 (5+1+3)
+```
+
+**Visual:**
+
+```
+k = 3
+[2, 1, 5, 1, 3, 2]
+ -------
+ Window 1: 2+1+5 = 8
+
+[2, 1, 5, 1, 3, 2]
+    -------
+ Window 2: 1+5+1 = 7 (remove 2, add 1)
+
+[2, 1, 5, 1, 3, 2]
+       -------
+ Window 3: 5+1+3 = 9 (remove 1, add 3) ← Max!
+
+[2, 1, 5, 1, 3, 2]
+          -------
+ Window 4: 1+3+2 = 6 (remove 5, add 2)
+```
+
+### Pattern 2: Variable Window - Longest Substring
+
+**Problem:** Find longest substring without repeating characters
+
+```javascript
+function lengthOfLongestSubstring(s) {
+  const seen = new Set();
+  let left = 0;
+  let maxLength = 0;
+
+  for (let right = 0; right < s.length; right++) {
+    // Shrink window if duplicate found
+    while (seen.has(s[right])) {
+      seen.delete(s[left]);
+      left++;
+    }
+
+    // Add current character
+    seen.add(s[right]);
+
+    // Update max length
+    maxLength = Math.max(maxLength, right - left + 1);
+  }
+
+  return maxLength;
+}
+
+console.log(lengthOfLongestSubstring("abcabcbb")); // 3 ("abc")
+console.log(lengthOfLongestSubstring("bbbbb")); // 1 ("b")
+console.log(lengthOfLongestSubstring("pwwkew")); // 3 ("wke")
+```
+
+**Visual:**
+
+```
+"abcabcbb"
+ ↑
+ l,r  seen: {a}, length: 1
+
+"abcabcbb"
+ ↑ ↑
+ l r  seen: {a,b}, length: 2
+
+"abcabcbb"
+ ↑   ↑
+ l   r  seen: {a,b,c}, length: 3
+
+"abcabcbb"
+ ↑     ↑
+ l     r  'a' duplicate! Shrink window
+          seen: {b,c,a}, length: 3
+
+Continue...
+```
+
+### Pattern 3: Minimum Window Substring
+
+**Problem:** Find smallest substring containing all characters of target
+
+```javascript
+function minWindow(s, t) {
+  if (s.length < t.length) return "";
+
+  // Count characters in target
+  const need = {};
+  for (let char of t) {
+    need[char] = (need[char] || 0) + 1;
+  }
+
+  let left = 0;
+  let minLen = Infinity;
+  let minStart = 0;
+  let required = Object.keys(need).length;
+  let formed = 0;
+  const windowCounts = {};
+
+  for (let right = 0; right < s.length; right++) {
+    const char = s[right];
+    windowCounts[char] = (windowCounts[char] || 0) + 1;
+
+    if (need[char] && windowCounts[char] === need[char]) {
+      formed++;
+    }
+
+    // Try to shrink window
+    while (formed === required && left <= right) {
+      // Update result
+      if (right - left + 1 < minLen) {
+        minLen = right - left + 1;
+        minStart = left;
+      }
+
+      // Remove from left
+      const leftChar = s[left];
+      windowCounts[leftChar]--;
+      if (need[leftChar] && windowCounts[leftChar] < need[leftChar]) {
+        formed--;
+      }
+      left++;
+    }
+  }
+
+  return minLen === Infinity ? "" : s.substring(minStart, minStart + minLen);
+}
+
+console.log(minWindow("ADOBECODEBANC", "ABC")); // "BANC"
+```
+
+### Pattern 4: Max Consecutive Ones
+
+**Problem:** Find max consecutive 1s after flipping at most k zeros
+
+```javascript
+function longestOnes(nums, k) {
+  let left = 0;
+  let maxLength = 0;
+  let zeroCount = 0;
+
+  for (let right = 0; right < nums.length; right++) {
+    if (nums[right] === 0) {
+      zeroCount++;
+    }
+
+    // Shrink window if too many zeros
+    while (zeroCount > k) {
+      if (nums[left] === 0) {
+        zeroCount--;
+      }
+      left++;
+    }
+
+    maxLength = Math.max(maxLength, right - left + 1);
+  }
+
+  return maxLength;
+}
+
+console.log(longestOnes([1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0], 2)); // 6
+// Can flip 2 zeros: [1,1,1,0,0,1,1,1,1,1]
+//                           ↑ ↑
+```
+
+## Practice Challenges! 🎮
+
+### Challenge 1: Three Sum
+
+Find all unique triplets that sum to zero!
+
+```javascript
+function threeSum(nums) {
+  // Your code here!
+  // Hint: Sort first, then use two pointers!
+}
+
+console.log(threeSum([-1, 0, 1, 2, -1, -4]));
+// [[-1, -1, 2], [-1, 0, 1]]
+```
+
+<details>
+<summary>Click to see the answer!</summary>
+
+```javascript
+function threeSum(nums) {
+  const result = [];
+  nums.sort((a, b) => a - b);
+
+  for (let i = 0; i < nums.length - 2; i++) {
+    // Skip duplicates
+    if (i > 0 && nums[i] === nums[i - 1]) continue;
+
+    let left = i + 1;
+    let right = nums.length - 1;
+
+    while (left < right) {
+      const sum = nums[i] + nums[left] + nums[right];
+
+      if (sum === 0) {
+        result.push([nums[i], nums[left], nums[right]]);
+
+        // Skip duplicates
+        while (left < right && nums[left] === nums[left + 1]) left++;
+        while (left < right && nums[right] === nums[right - 1]) right--;
+
+        left++;
+        right--;
+      } else if (sum < 0) {
+        left++;
+      } else {
+        right--;
+      }
+    }
+  }
+
+  return result;
+}
+```
+
+</details>
+
+### Challenge 2: Fruits Into Baskets
+
+Pick maximum fruits with at most 2 types!
+
+```javascript
+function totalFruit(fruits) {
+  // Your code here!
+  // Hint: Sliding window with at most 2 types!
+}
+
+console.log(totalFruit([1, 2, 1])); // 3
+console.log(totalFruit([0, 1, 2, 2])); // 3
+console.log(totalFruit([1, 2, 3, 2, 2])); // 4
+```
+
+<details>
+<summary>Click to see the answer!</summary>
+
+```javascript
+function totalFruit(fruits) {
+  const basket = new Map();
+  let left = 0;
+  let maxFruits = 0;
+
+  for (let right = 0; right < fruits.length; right++) {
+    basket.set(fruits[right], (basket.get(fruits[right]) || 0) + 1);
+
+    // Shrink if more than 2 types
+    while (basket.size > 2) {
+      basket.set(fruits[left], basket.get(fruits[left]) - 1);
+      if (basket.get(fruits[left]) === 0) {
+        basket.delete(fruits[left]);
+      }
+      left++;
+    }
+
+    maxFruits = Math.max(maxFruits, right - left + 1);
+  }
+
+  return maxFruits;
+}
+```
+
+</details>
+
+### Challenge 3: Subarray Sum Equals K
+
+Count subarrays with sum equal to k!
+
+```javascript
+function subarraySum(nums, k) {
+  // Your code here!
+  // Hint: Use prefix sum and hash map!
+}
+
+console.log(subarraySum([1, 1, 1], 2)); // 2
+console.log(subarraySum([1, 2, 3], 3)); // 2
+```
+
+<details>
+<summary>Click to see the answer!</summary>
+
+```javascript
+function subarraySum(nums, k) {
+  const prefixSums = new Map();
+  prefixSums.set(0, 1);
+
+  let sum = 0;
+  let count = 0;
+
+  for (let num of nums) {
+    sum += num;
+
+    // Check if (sum - k) exists
+    if (prefixSums.has(sum - k)) {
+      count += prefixSums.get(sum - k);
+    }
+
+    prefixSums.set(sum, (prefixSums.get(sum) || 0) + 1);
+  }
+
+  return count;
+}
+```
+
+</details>
+
+## When to Use Which Pattern?
+
+### Use Two Pointers When:
+
+- ✅ Array is sorted
+- ✅ Need to find pairs/triplets
+- ✅ Comparing elements from both ends
+- ✅ Removing duplicates
+
+### Use Sliding Window When:
+
+- ✅ Need contiguous subarray/substring
+- ✅ Finding max/min of subarrays
+- ✅ Optimizing brute force O(n²) to O(n)
+- ✅ Maintaining running calculations
+
+## Time Complexity Comparison
+
+| Problem               | Brute Force | Optimized | Technique      |
+| --------------------- | ----------- | --------- | -------------- |
+| **Two Sum**           | O(n²)       | O(n)      | Two Pointers   |
+| **Max Subarray Sum**  | O(n×k)      | O(n)      | Sliding Window |
+| **Longest Substring** | O(n²)       | O(n)      | Sliding Window |
+| **Remove Duplicates** | O(n²)       | O(n)      | Two Pointers   |
+
+## Key Takeaways! 🎯
+
+1. **Two Pointers** - Use two indexes to traverse array efficiently
+2. **Sliding Window** - Maintain a window and slide it through array
+3. **Both optimize** - Turn O(n²) into O(n)
+4. **Two Pointers** - Often for sorted arrays, finding pairs
+5. **Sliding Window** - For contiguous subarrays, running calculations
+6. **Practice makes perfect** - These are interview favorites!
+
+## Quick Reference Card 📋
+
+```javascript
+// TWO POINTERS - Opposite Ends
+function twoSum(arr, target) {
+  let left = 0,
+    right = arr.length - 1;
+  while (left < right) {
+    const sum = arr[left] + arr[right];
+    if (sum === target) return [left, right];
+    sum < target ? left++ : right--;
+  }
+}
+
+// TWO POINTERS - Same Direction
+function removeDuplicates(arr) {
+  let slow = 0;
+  for (let fast = 1; fast < arr.length; fast++) {
+    if (arr[fast] !== arr[slow]) {
+      arr[++slow] = arr[fast];
+    }
+  }
+  return slow + 1;
+}
+
+// SLIDING WINDOW - Fixed Size
+function maxSum(arr, k) {
+  let sum = arr.slice(0, k).reduce((a, b) => a + b);
+  let max = sum;
+  for (let i = k; i < arr.length; i++) {
+    sum = sum - arr[i - k] + arr[i];
+    max = Math.max(max, sum);
+  }
+  return max;
+}
+
+// SLIDING WINDOW - Variable Size
+function longestSubstring(s) {
+  const seen = new Set();
+  let left = 0,
+    max = 0;
+  for (let right = 0; right < s.length; right++) {
+    while (seen.has(s[right])) {
+      seen.delete(s[left++]);
+    }
+    seen.add(s[right]);
+    max = Math.max(max, right - left + 1);
+  }
+  return max;
+}
+```
+
+## 🎉 Congratulations! Series Complete!
+
+You've finished **all 10 episodes** of "Mastering DSA with JavaScript"!
+
+### What You've Learned:
+
+**Beginner Track:**
+
+1. ✅ Introduction to DSA
+2. ✅ Arrays Fundamentals
+3. ✅ Strings Manipulation
+4. ✅ Objects & Hash Maps
+5. ✅ Sets
+
+**Intermediate Track:** 6. ✅ Stacks & Queues 7. ✅ Linked Lists 8. ✅ Trees & BST 9. ✅ Recursion 10. ✅ Two Pointers & Sliding Window
+
+### You're Now Ready For:
+
+- 🎯 **Coding Interviews** at top companies
+- 💼 **Real-world Problem Solving**
+- 🚀 **Advanced Algorithms** (graphs, dynamic programming)
+- 📚 **Competitive Programming**
+
+### Keep Practicing!
+
+- Solve problems on LeetCode, HackerRank
+- Build projects using these concepts
+- Teach others what you've learned
+- Keep coding every day!
+
+**Remember:** Every expert was once a beginner. You've got this! 💪
+
+---
+
+_This is the FINAL episode (Episode 10) of the "Mastering DSA with JavaScript" series._
+
+**Previous Episode:** [Recursion →](./09-recursion-basics)
+
+**Series Complete!** 🎉 Check out the [full series](./01-introduction-to-dsa) to review any topic!
+
+**Questions?** Drop a comment below! 💬
+
+**What's next?** Stay tuned for advanced topics like Graphs, Dynamic Programming, and more!

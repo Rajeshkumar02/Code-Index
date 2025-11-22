@@ -2,7 +2,7 @@ import { source } from "@/lib/source";
 import { notFound } from "next/navigation";
 import BlogCard from "@/components/blog-card";
 import Link from "next/link";
-import { ArrowLeft, Hash } from "lucide-react";
+import { ChevronLeft, Hash } from "lucide-react";
 import {
   formatTagName,
   safeDecodeURIComponent,
@@ -75,7 +75,7 @@ export default async function TagPage({ params }: TagPageProps) {
             href="/"
             className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
           >
-            <ArrowLeft className="h-4 w-4" />
+            <ChevronLeft className="h-4 w-4" />
             Back to Home
           </Link>
         </div>

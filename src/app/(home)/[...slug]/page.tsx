@@ -8,6 +8,12 @@ import PostSuggestions from "@/components/post-suggestions";
 import SeriesPlaylist from "@/components/series-playlist";
 import SeriesNavigation from "@/components/series-navigation";
 import { getSeriesInfo } from "@/lib/series";
+import ReadingProgress from "@/components/reading-progress";
+import ScrollToTop from "@/components/scroll-to-top";
+import ArticleTitleSetter from "@/components/article-title-setter";
+import ViewCounter from "@/components/view-counter";
+import BlogImageFallback from "@/components/blog-image-fallback";
+// import ReactionButtons from "@/components/reaction-buttons";
 
 // Convert MDX page data to plain objects for client components
 function convertToPlainData(post: any) {
@@ -55,11 +61,17 @@ export default async function Page(props: {
 
     return (
       <>
+        {/* Set Navbar Title */}
+        <ArticleTitleSetter title={page?.data?.title ?? "Untitled"} />
+
         {/* Structured Data */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
         />
+
+        <ReadingProgress />
+        <ScrollToTop />
 
         {/* Article Header Section */}
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-6">
@@ -121,21 +133,22 @@ export default async function Page(props: {
                 </div>
               </>
             )}
+
+            {/* View Counter */}
+            <span aria-hidden="true">•</span>
+            <ViewCounter slug={params?.slug?.join("/") || ""} />
           </dl>
         </div>
 
         {/* Cover Image Section */}
-        {page?.data?.image && (
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
-            <div className="relative w-full aspect-video overflow-hidden rounded-lg">
-              <img
-                src={page.data.image as string}
-                alt={page?.data?.title ?? ""}
-                className="w-full h-full object-cover object-center"
-              />
-            </div>
-          </div>
-        )}
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
+          <BlogImageFallback
+            src={page?.data?.image as string | undefined}
+            alt={page?.data?.title ?? ""}
+            title={page?.data?.title ?? ""}
+            className="w-full aspect-video"
+          />
+        </div>
 
         <article className="container mx-auto px-4 py-12">
           {/* Main Content with Optimal Reading Width */}
@@ -144,11 +157,16 @@ export default async function Page(props: {
             {seriesInfo && (
               <SeriesPlaylist seriesInfo={seriesInfo} />
             )}
-            
+
             {/* Article Content with Standard Typography */}
             <div className="prose ">
               <Mdx components={getMDXComponents()} />
             </div>
+
+            {/* Reaction Buttons */}
+            {/* <div className="flex justify-center mt-12 mb-8">
+              <ReactionButtons slug={params?.slug?.join("/") || ""} />
+            </div> */}
 
             {/* Series Navigation - Show after content if part of series */}
             {seriesInfo && (

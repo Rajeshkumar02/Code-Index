@@ -1,0 +1,817 @@
+---
+title: "Stacks & Queues in JavaScript - LIFO and FIFO Explained! 📚"
+description: "Master Stacks and Queues with simple explanations! Learn LIFO vs FIFO, how to implement them, and solve real interview problems. Perfect for beginners."
+date: 2024-11-27
+author: "Code Index"
+category: "dsa"
+tags:
+  [
+    "javascript",
+    "stacks",
+    "queues",
+    "data-structures",
+    "dsa",
+    "beginner",
+    "tutorial",
+    "interview-prep",
+  ]
+featured: true
+image: "/images/stacks-queues.jpg"
+readingTime: "14 min read"
+series: "dsa-javascript"
+seriesOrder: 6
+---
+
+# Stacks & Queues - LIFO and FIFO Explained! 📚
+
+## A Story to Start With...
+
+### The Stack Story - Plates in a Cafeteria 🍽️
+
+Imagine you're in a cafeteria with a stack of clean plates:
+
+```
+    [Plate 3] ← Top (most recent)
+    [Plate 2]
+    [Plate 1] ← Bottom (oldest)
+```
+
+**Rules:**
+
+- You can only take the TOP plate
+- You can only add a new plate on TOP
+- You can't take from the middle or bottom!
+
+**This is a STACK!** Last In, First Out (LIFO) 🎯
+
+### The Queue Story - Line at Ice Cream Shop 🍦
+
+Imagine people waiting in line for ice cream:
+
+```
+[Person 1] → [Person 2] → [Person 3] → [Person 4]
+   ↑                                        ↑
+  Front                                   Back
+(gets served first)                 (just joined)
+```
+
+**Rules:**
+
+- First person in line gets served first
+- New people join at the back
+- No cutting in line!
+
+**This is a QUEUE!** First In, First Out (FIFO) 🎯
+
+## What is a Stack? (The Super Simple Version)
+
+A stack is like a **pile of books**:
+
+- Add a book on top (push)
+- Remove the top book (pop)
+- Look at the top book without removing it (peek)
+
+```javascript
+const stack = [];
+
+// Add books (push)
+stack.push("Book 1");
+stack.push("Book 2");
+stack.push("Book 3");
+
+console.log(stack); // ["Book 1", "Book 2", "Book 3"]
+
+// Remove top book (pop)
+const topBook = stack.pop();
+console.log(topBook); // "Book 3"
+console.log(stack); // ["Book 1", "Book 2"]
+```
+
+## Implementing a Stack in JavaScript
+
+### Method 1: Using Array (Easiest!)
+
+```javascript
+class Stack {
+  constructor() {
+    this.items = [];
+  }
+
+  // Add to top
+  push(element) {
+    this.items.push(element);
+  }
+
+  // Remove from top
+  pop() {
+    if (this.isEmpty()) {
+      return null;
+    }
+    return this.items.pop();
+  }
+
+  // Look at top without removing
+  peek() {
+    if (this.isEmpty()) {
+      return null;
+    }
+    return this.items[this.items.length - 1];
+  }
+
+  // Check if empty
+  isEmpty() {
+    return this.items.length === 0;
+  }
+
+  // Get size
+  size() {
+    return this.items.length;
+  }
+
+  // Clear all
+  clear() {
+    this.items = [];
+  }
+
+  // Print stack
+  print() {
+    console.log(this.items.join(" <- "));
+  }
+}
+
+// Let's use it!
+const stack = new Stack();
+stack.push("Plate 1");
+stack.push("Plate 2");
+stack.push("Plate 3");
+
+stack.print(); // Plate 1 <- Plate 2 <- Plate 3
+
+console.log(stack.peek()); // "Plate 3" (top)
+console.log(stack.pop()); // "Plate 3" (removed)
+console.log(stack.size()); // 2
+```
+
+## Real-World Stack Examples
+
+### 1. Browser Back Button
+
+```javascript
+class BrowserHistory {
+  constructor() {
+    this.history = new Stack();
+    this.currentPage = null;
+  }
+
+  visit(url) {
+    if (this.currentPage) {
+      this.history.push(this.currentPage);
+    }
+    this.currentPage = url;
+    console.log(`Visiting: ${url}`);
+  }
+
+  back() {
+    if (this.history.isEmpty()) {
+      console.log("No previous page!");
+      return;
+    }
+
+    this.currentPage = this.history.pop();
+    console.log(`Going back to: ${this.currentPage}`);
+  }
+}
+
+const browser = new BrowserHistory();
+browser.visit("google.com");
+browser.visit("youtube.com");
+browser.visit("netflix.com");
+
+browser.back(); // Going back to: youtube.com
+browser.back(); // Going back to: google.com
+```
+
+### 2. Undo/Redo Feature
+
+```javascript
+class TextEditor {
+  constructor() {
+    this.text = "";
+    this.history = new Stack();
+  }
+
+  type(newText) {
+    this.history.push(this.text);
+    this.text += newText;
+    console.log(`Text: "${this.text}"`);
+  }
+
+  undo() {
+    if (this.history.isEmpty()) {
+      console.log("Nothing to undo!");
+      return;
+    }
+
+    this.text = this.history.pop();
+    console.log(`After undo: "${this.text}"`);
+  }
+}
+
+const editor = new TextEditor();
+editor.type("Hello"); // Text: "Hello"
+editor.type(" World"); // Text: "Hello World"
+editor.undo(); // After undo: "Hello"
+```
+
+### 3. Function Call Stack
+
+```javascript
+function first() {
+  console.log("First function");
+  second();
+  console.log("Back to first");
+}
+
+function second() {
+  console.log("Second function");
+  third();
+  console.log("Back to second");
+}
+
+function third() {
+  console.log("Third function");
+}
+
+first();
+
+// Output:
+// First function
+// Second function
+// Third function
+// Back to second
+// Back to first
+
+// Call Stack visualization:
+// [third]  ← Execute and pop
+// [second] ← Execute and pop
+// [first]  ← Execute and pop
+```
+
+## What is a Queue? (The Super Simple Version)
+
+A queue is like a **line at a store**:
+
+- Join at the back (enqueue)
+- Leave from the front (dequeue)
+- Look at who's first (peek)
+
+```javascript
+const queue = [];
+
+// People join the line (enqueue)
+queue.push("Person 1");
+queue.push("Person 2");
+queue.push("Person 3");
+
+console.log(queue); // ["Person 1", "Person 2", "Person 3"]
+
+// First person gets served (dequeue)
+const served = queue.shift();
+console.log(served); // "Person 1"
+console.log(queue); // ["Person 2", "Person 3"]
+```
+
+## Implementing a Queue in JavaScript
+
+### Method 1: Using Array
+
+```javascript
+class Queue {
+  constructor() {
+    this.items = [];
+  }
+
+  // Add to back
+  enqueue(element) {
+    this.items.push(element);
+  }
+
+  // Remove from front
+  dequeue() {
+    if (this.isEmpty()) {
+      return null;
+    }
+    return this.items.shift();
+  }
+
+  // Look at front without removing
+  front() {
+    if (this.isEmpty()) {
+      return null;
+    }
+    return this.items[0];
+  }
+
+  // Check if empty
+  isEmpty() {
+    return this.items.length === 0;
+  }
+
+  // Get size
+  size() {
+    return this.items.length;
+  }
+
+  // Clear all
+  clear() {
+    this.items = [];
+  }
+
+  // Print queue
+  print() {
+    console.log(this.items.join(" → "));
+  }
+}
+
+// Let's use it!
+const queue = new Queue();
+queue.enqueue("Customer 1");
+queue.enqueue("Customer 2");
+queue.enqueue("Customer 3");
+
+queue.print(); // Customer 1 → Customer 2 → Customer 3
+
+console.log(queue.front()); // "Customer 1"
+console.log(queue.dequeue()); // "Customer 1" (served)
+console.log(queue.size()); // 2
+```
+
+## Real-World Queue Examples
+
+### 1. Print Queue
+
+```javascript
+class PrintQueue {
+  constructor() {
+    this.queue = new Queue();
+  }
+
+  addDocument(doc) {
+    this.queue.enqueue(doc);
+    console.log(`Added to print queue: ${doc}`);
+    console.log(`Queue size: ${this.queue.size()}`);
+  }
+
+  printNext() {
+    if (this.queue.isEmpty()) {
+      console.log("No documents to print!");
+      return;
+    }
+
+    const doc = this.queue.dequeue();
+    console.log(`Printing: ${doc}`);
+    console.log(`Remaining: ${this.queue.size()}`);
+  }
+}
+
+const printer = new PrintQueue();
+printer.addDocument("Resume.pdf");
+printer.addDocument("Report.docx");
+printer.addDocument("Photo.jpg");
+
+printer.printNext(); // Printing: Resume.pdf
+printer.printNext(); // Printing: Report.docx
+```
+
+### 2. Customer Service Queue
+
+```javascript
+class CustomerService {
+  constructor() {
+    this.queue = new Queue();
+  }
+
+  customerArrives(name) {
+    this.queue.enqueue(name);
+    console.log(`${name} joined the queue`);
+    console.log(`Position in queue: ${this.queue.size()}`);
+  }
+
+  serveNext() {
+    if (this.queue.isEmpty()) {
+      console.log("No customers waiting!");
+      return;
+    }
+
+    const customer = this.queue.dequeue();
+    console.log(`Now serving: ${customer}`);
+    console.log(`Customers waiting: ${this.queue.size()}`);
+  }
+}
+
+const service = new CustomerService();
+service.customerArrives("Alice");
+service.customerArrives("Bob");
+service.customerArrives("Charlie");
+
+service.serveNext(); // Now serving: Alice
+```
+
+## Stack vs Queue - When to Use What?
+
+| Feature      | Stack (LIFO)           | Queue (FIFO)               |
+| ------------ | ---------------------- | -------------------------- |
+| **Order**    | Last In, First Out     | First In, First Out        |
+| **Add**      | Push (top)             | Enqueue (back)             |
+| **Remove**   | Pop (top)              | Dequeue (front)            |
+| **Use When** | Need most recent first | Need oldest first          |
+| **Examples** | Undo/Redo, Back button | Print queue, Customer line |
+
+## Common Stack Patterns (Interview Favorites!)
+
+### Pattern 1: Valid Parentheses
+
+**Problem:** Check if brackets are balanced!
+
+```javascript
+function isValid(s) {
+  const stack = [];
+  const pairs = {
+    "(": ")",
+    "[": "]",
+    "{": "}",
+  };
+
+  for (let char of s) {
+    // If opening bracket, push to stack
+    if (char in pairs) {
+      stack.push(char);
+    }
+    // If closing bracket
+    else {
+      const last = stack.pop();
+      if (pairs[last] !== char) {
+        return false;
+      }
+    }
+  }
+
+  // Stack should be empty if balanced
+  return stack.length === 0;
+}
+
+console.log(isValid("()")); // true
+console.log(isValid("()[]{}")); // true
+console.log(isValid("(]")); // false
+console.log(isValid("([)]")); // false
+console.log(isValid("{[]}")); // true
+```
+
+### Pattern 2: Reverse a String
+
+```javascript
+function reverseString(str) {
+  const stack = [];
+
+  // Push all characters
+  for (let char of str) {
+    stack.push(char);
+  }
+
+  // Pop all characters (reversed!)
+  let reversed = "";
+  while (stack.length > 0) {
+    reversed += stack.pop();
+  }
+
+  return reversed;
+}
+
+console.log(reverseString("HELLO")); // "OLLEH"
+```
+
+### Pattern 3: Min Stack
+
+**Problem:** Stack that can return minimum value in O(1)!
+
+```javascript
+class MinStack {
+  constructor() {
+    this.stack = [];
+    this.minStack = [];
+  }
+
+  push(val) {
+    this.stack.push(val);
+
+    // Update min stack
+    if (this.minStack.length === 0 || val <= this.getMin()) {
+      this.minStack.push(val);
+    }
+  }
+
+  pop() {
+    const val = this.stack.pop();
+
+    // Update min stack
+    if (val === this.getMin()) {
+      this.minStack.pop();
+    }
+
+    return val;
+  }
+
+  top() {
+    return this.stack[this.stack.length - 1];
+  }
+
+  getMin() {
+    return this.minStack[this.minStack.length - 1];
+  }
+}
+
+const minStack = new MinStack();
+minStack.push(5);
+minStack.push(2);
+minStack.push(7);
+minStack.push(1);
+
+console.log(minStack.getMin()); // 1
+minStack.pop();
+console.log(minStack.getMin()); // 2
+```
+
+## Common Queue Patterns
+
+### Pattern 1: Hot Potato Game
+
+```javascript
+function hotPotato(names, num) {
+  const queue = new Queue();
+
+  // Add all players
+  for (let name of names) {
+    queue.enqueue(name);
+  }
+
+  // Pass the potato
+  while (queue.size() > 1) {
+    // Pass potato num times
+    for (let i = 0; i < num; i++) {
+      queue.enqueue(queue.dequeue());
+    }
+
+    // Eliminate the one holding potato
+    const eliminated = queue.dequeue();
+    console.log(`${eliminated} is eliminated!`);
+  }
+
+  return queue.dequeue();
+}
+
+const players = ["Alice", "Bob", "Charlie", "David", "Eve"];
+const winner = hotPotato(players, 3);
+console.log(`Winner: ${winner}`);
+```
+
+### Pattern 2: Recent Counter
+
+**Problem:** Count requests in last 3000ms!
+
+```javascript
+class RecentCounter {
+  constructor() {
+    this.queue = [];
+  }
+
+  ping(t) {
+    this.queue.push(t);
+
+    // Remove requests older than 3000ms
+    while (this.queue[0] < t - 3000) {
+      this.queue.shift();
+    }
+
+    return this.queue.length;
+  }
+}
+
+const counter = new RecentCounter();
+console.log(counter.ping(1)); // 1
+console.log(counter.ping(100)); // 2
+console.log(counter.ping(3001)); // 3
+console.log(counter.ping(3002)); // 3 (first request expired)
+```
+
+## Practice Challenges! 🎮
+
+### Challenge 1: Implement Stack Using Queues
+
+Implement a stack using only queue operations!
+
+```javascript
+class StackUsingQueues {
+  constructor() {
+    this.queue1 = [];
+    this.queue2 = [];
+  }
+
+  push(x) {
+    // Your code here!
+  }
+
+  pop() {
+    // Your code here!
+  }
+
+  top() {
+    // Your code here!
+  }
+}
+```
+
+<details>
+<summary>Click to see the answer!</summary>
+
+```javascript
+class StackUsingQueues {
+  constructor() {
+    this.queue1 = [];
+    this.queue2 = [];
+  }
+
+  push(x) {
+    this.queue1.push(x);
+  }
+
+  pop() {
+    // Move all but last to queue2
+    while (this.queue1.length > 1) {
+      this.queue2.push(this.queue1.shift());
+    }
+
+    const result = this.queue1.shift();
+
+    // Swap queues
+    [this.queue1, this.queue2] = [this.queue2, this.queue1];
+
+    return result;
+  }
+
+  top() {
+    while (this.queue1.length > 1) {
+      this.queue2.push(this.queue1.shift());
+    }
+
+    const result = this.queue1[0];
+    this.queue2.push(this.queue1.shift());
+
+    [this.queue1, this.queue2] = [this.queue2, this.queue1];
+
+    return result;
+  }
+}
+```
+
+</details>
+
+### Challenge 2: Simplify Path
+
+Simplify a Unix file path!
+
+```javascript
+function simplifyPath(path) {
+  // Your code here!
+  // Hint: Use a stack!
+}
+
+console.log(simplifyPath("/home/")); // "/home"
+console.log(simplifyPath("/../")); // "/"
+console.log(simplifyPath("/home//foo/")); // "/home/foo"
+console.log(simplifyPath("/a/./b/../../c/")); // "/c"
+```
+
+<details>
+<summary>Click to see the answer!</summary>
+
+```javascript
+function simplifyPath(path) {
+  const stack = [];
+  const parts = path.split("/");
+
+  for (let part of parts) {
+    if (part === "" || part === ".") {
+      continue; // Skip empty and current directory
+    } else if (part === "..") {
+      stack.pop(); // Go up one directory
+    } else {
+      stack.push(part); // Add directory
+    }
+  }
+
+  return "/" + stack.join("/");
+}
+```
+
+</details>
+
+### Challenge 3: Daily Temperatures
+
+Find how many days until warmer temperature!
+
+```javascript
+function dailyTemperatures(temps) {
+  // Your code here!
+  // Hint: Use a stack to track indices!
+}
+
+console.log(dailyTemperatures([73, 74, 75, 71, 69, 72, 76, 73]));
+// [1, 1, 4, 2, 1, 1, 0, 0]
+```
+
+<details>
+<summary>Click to see the answer!</summary>
+
+```javascript
+function dailyTemperatures(temps) {
+  const result = new Array(temps.length).fill(0);
+  const stack = []; // Store indices
+
+  for (let i = 0; i < temps.length; i++) {
+    while (stack.length > 0 && temps[i] > temps[stack[stack.length - 1]]) {
+      const prevIndex = stack.pop();
+      result[prevIndex] = i - prevIndex;
+    }
+    stack.push(i);
+  }
+
+  return result;
+}
+```
+
+</details>
+
+## Key Takeaways! 🎯
+
+1. **Stack = LIFO** - Last In, First Out (like plates)
+2. **Queue = FIFO** - First In, First Out (like a line)
+3. **Stacks for recent items** - Undo, back button, function calls
+4. **Queues for fair ordering** - Print queue, customer service
+5. **Easy to implement** - Use arrays in JavaScript
+6. **Common in interviews** - Practice the patterns!
+
+## Quick Reference Card 📋
+
+```javascript
+// STACK
+const stack = [];
+stack.push(item)      // Add to top
+stack.pop()           // Remove from top
+stack[stack.length-1] // Peek at top
+
+// QUEUE
+const queue = [];
+queue.push(item)      // Add to back (enqueue)
+queue.shift()         // Remove from front (dequeue)
+queue[0]              // Peek at front
+
+// Stack Class
+class Stack {
+  push(item)
+  pop()
+  peek()
+  isEmpty()
+  size()
+}
+
+// Queue Class
+class Queue {
+  enqueue(item)
+  dequeue()
+  front()
+  isEmpty()
+  size()
+}
+```
+
+## What's Next?
+
+In the next episode, we'll learn about **Linked Lists** - a fundamental data structure where elements are connected like a chain!
+
+We'll cover:
+
+- What linked lists are
+- Singly vs Doubly linked lists
+- How to implement them
+- Common operations
+- Interview problems
+
+---
+
+_This is Episode 6 of the "Mastering DSA with JavaScript" series._
+
+**Previous Episode:** [Sets in JavaScript →](./05-sets-javascript)
+
+**Next Episode:** Linked Lists - Connecting the Dots! →
+
+**Questions?** Drop a comment below! 💬

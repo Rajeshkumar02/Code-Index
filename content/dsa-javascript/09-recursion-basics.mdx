@@ -1,0 +1,733 @@
+---
+title: "Recursion in JavaScript - Functions Calling Themselves! 🔄"
+description: "Master Recursion with simple explanations! Learn how functions call themselves, base cases, recursive cases, and solve classic problems. Perfect for beginners."
+date: 2024-11-30
+author: "Code Index"
+category: "dsa"
+tags:
+  [
+    "javascript",
+    "recursion",
+    "data-structures",
+    "dsa",
+    "beginner",
+    "tutorial",
+    "interview-prep",
+    "algorithms",
+  ]
+featured: true
+image: "/images/recursion.jpg"
+readingTime: "15 min read"
+series: "dsa-javascript"
+seriesOrder: 9
+---
+
+# Recursion - Functions Calling Themselves! 🔄
+
+## A Story to Start With...
+
+Imagine you're looking for a book in a huge library. You ask the librarian:
+
+**You:** "Where is the Harry Potter book?"  
+**Librarian:** "I don't know, ask the assistant librarian."
+
+**You:** "Where is the Harry Potter book?"  
+**Assistant:** "I don't know, ask the shelf manager."
+
+**You:** "Where is the Harry Potter book?"  
+**Manager:** "It's on shelf 42!"
+
+Now you go back and tell everyone:  
+**You → Manager:** "Thanks!"  
+**You → Assistant:** "It's on shelf 42!"  
+**You → Librarian:** "It's on shelf 42!"
+
+**This is recursion!** You keep asking the same question to different people until someone knows the answer, then you pass the answer back up! 🎯
+
+## What is Recursion? (The Super Simple Version)
+
+Recursion is when a **function calls itself**!
+
+```javascript
+function countdown(n) {
+  console.log(n);
+
+  if (n > 0) {
+    countdown(n - 1); // Function calls itself!
+  }
+}
+
+countdown(5);
+// Output:
+// 5
+// 4
+// 3
+// 2
+// 1
+// 0
+```
+
+**It's like looking in a mirror that reflects another mirror!** 🪞
+
+## The Two Rules of Recursion
+
+Every recursive function needs:
+
+### 1. Base Case - When to STOP
+
+```javascript
+function countdown(n) {
+  // BASE CASE: Stop when n is 0
+  if (n === 0) {
+    console.log("Blast off! 🚀");
+    return;
+  }
+
+  console.log(n);
+  countdown(n - 1);
+}
+```
+
+**Without a base case, the function runs FOREVER!** ⚠️
+
+### 2. Recursive Case - Call Yourself with Smaller Problem
+
+```javascript
+function countdown(n) {
+  if (n === 0) {
+    console.log("Blast off! 🚀");
+    return;
+  }
+
+  console.log(n);
+  countdown(n - 1); // RECURSIVE CASE: Smaller problem (n-1)
+}
+```
+
+## How Recursion Works - The Call Stack
+
+Let's see what happens when we call `countdown(3)`:
+
+```javascript
+function countdown(n) {
+  if (n === 0) return;
+  console.log(n);
+  countdown(n - 1);
+}
+
+countdown(3);
+```
+
+**Call Stack Visualization:**
+
+```
+Step 1: countdown(3)
+  ↓ prints 3
+  ↓ calls countdown(2)
+
+Step 2: countdown(2)
+  ↓ prints 2
+  ↓ calls countdown(1)
+
+Step 3: countdown(1)
+  ↓ prints 1
+  ↓ calls countdown(0)
+
+Step 4: countdown(0)
+  ↓ base case! return
+
+Step 5: Back to countdown(1) - done
+Step 6: Back to countdown(2) - done
+Step 7: Back to countdown(3) - done
+
+Output: 3, 2, 1
+```
+
+## Classic Recursion Examples
+
+### Example 1: Factorial
+
+**Problem:** Calculate 5! = 5 × 4 × 3 × 2 × 1 = 120
+
+```javascript
+// Recursive solution
+function factorial(n) {
+  // Base case
+  if (n === 0 || n === 1) {
+    return 1;
+  }
+
+  // Recursive case
+  return n * factorial(n - 1);
+}
+
+console.log(factorial(5)); // 120
+
+// How it works:
+// factorial(5) = 5 * factorial(4)
+//              = 5 * 4 * factorial(3)
+//              = 5 * 4 * 3 * factorial(2)
+//              = 5 * 4 * 3 * 2 * factorial(1)
+//              = 5 * 4 * 3 * 2 * 1
+//              = 120
+```
+
+**Iterative (loop) solution for comparison:**
+
+```javascript
+function factorialIterative(n) {
+  let result = 1;
+  for (let i = 2; i <= n; i++) {
+    result *= i;
+  }
+  return result;
+}
+
+console.log(factorialIterative(5)); // 120
+```
+
+### Example 2: Fibonacci Sequence
+
+**Problem:** Find the nth Fibonacci number (0, 1, 1, 2, 3, 5, 8, 13...)
+
+```javascript
+function fibonacci(n) {
+  // Base cases
+  if (n === 0) return 0;
+  if (n === 1) return 1;
+
+  // Recursive case
+  return fibonacci(n - 1) + fibonacci(n - 2);
+}
+
+console.log(fibonacci(6)); // 8
+
+// Sequence: 0, 1, 1, 2, 3, 5, 8
+//           0  1  2  3  4  5  6
+```
+
+**How it works:**
+
+```
+fibonacci(6)
+  = fibonacci(5) + fibonacci(4)
+  = (fibonacci(4) + fibonacci(3)) + (fibonacci(3) + fibonacci(2))
+  = ... keeps breaking down until base cases
+  = 8
+```
+
+### Example 3: Sum of Array
+
+```javascript
+function sumArray(arr) {
+  // Base case: empty array
+  if (arr.length === 0) {
+    return 0;
+  }
+
+  // Recursive case: first element + sum of rest
+  return arr[0] + sumArray(arr.slice(1));
+}
+
+console.log(sumArray([1, 2, 3, 4, 5])); // 15
+
+// How it works:
+// sumArray([1,2,3,4,5])
+//   = 1 + sumArray([2,3,4,5])
+//   = 1 + 2 + sumArray([3,4,5])
+//   = 1 + 2 + 3 + sumArray([4,5])
+//   = 1 + 2 + 3 + 4 + sumArray([5])
+//   = 1 + 2 + 3 + 4 + 5 + sumArray([])
+//   = 1 + 2 + 3 + 4 + 5 + 0
+//   = 15
+```
+
+### Example 4: Reverse a String
+
+```javascript
+function reverseString(str) {
+  // Base case: empty or single character
+  if (str.length <= 1) {
+    return str;
+  }
+
+  // Recursive case: last char + reverse of rest
+  return str[str.length - 1] + reverseString(str.slice(0, -1));
+}
+
+console.log(reverseString("HELLO")); // "OLLEH"
+
+// How it works:
+// reverseString("HELLO")
+//   = "O" + reverseString("HELL")
+//   = "O" + "L" + reverseString("HEL")
+//   = "O" + "L" + "L" + reverseString("HE")
+//   = "O" + "L" + "L" + "E" + reverseString("H")
+//   = "O" + "L" + "L" + "E" + "H"
+//   = "OLLEH"
+```
+
+### Example 5: Power Function
+
+```javascript
+function power(base, exponent) {
+  // Base case
+  if (exponent === 0) {
+    return 1;
+  }
+
+  // Recursive case
+  return base * power(base, exponent - 1);
+}
+
+console.log(power(2, 5)); // 32 (2^5)
+
+// How it works:
+// power(2, 5)
+//   = 2 * power(2, 4)
+//   = 2 * 2 * power(2, 3)
+//   = 2 * 2 * 2 * power(2, 2)
+//   = 2 * 2 * 2 * 2 * power(2, 1)
+//   = 2 * 2 * 2 * 2 * 2 * power(2, 0)
+//   = 2 * 2 * 2 * 2 * 2 * 1
+//   = 32
+```
+
+## Recursion with Data Structures
+
+### Recursion on Arrays
+
+```javascript
+// Find maximum value in array
+function findMax(arr, index = 0) {
+  // Base case: last element
+  if (index === arr.length - 1) {
+    return arr[index];
+  }
+
+  // Recursive case: compare current with max of rest
+  const maxOfRest = findMax(arr, index + 1);
+  return Math.max(arr[index], maxOfRest);
+}
+
+console.log(findMax([3, 7, 2, 9, 1])); // 9
+```
+
+### Recursion on Objects
+
+```javascript
+// Deep clone an object
+function deepClone(obj) {
+  // Base case: not an object
+  if (typeof obj !== "object" || obj === null) {
+    return obj;
+  }
+
+  // Recursive case: clone each property
+  const clone = Array.isArray(obj) ? [] : {};
+
+  for (let key in obj) {
+    clone[key] = deepClone(obj[key]);
+  }
+
+  return clone;
+}
+
+const original = {
+  name: "Sarah",
+  age: 10,
+  hobbies: ["reading", "coding"],
+  address: {
+    city: "New York",
+    country: "USA",
+  },
+};
+
+const copy = deepClone(original);
+```
+
+### Recursion on Trees
+
+```javascript
+// Count all nodes in a tree
+function countNodes(node) {
+  // Base case: no node
+  if (!node) {
+    return 0;
+  }
+
+  // Recursive case: 1 + left subtree + right subtree
+  return 1 + countNodes(node.left) + countNodes(node.right);
+}
+
+// Find height of tree
+function treeHeight(node) {
+  // Base case: no node
+  if (!node) {
+    return 0;
+  }
+
+  // Recursive case: 1 + max of left and right heights
+  return 1 + Math.max(treeHeight(node.left), treeHeight(node.right));
+}
+```
+
+## Common Recursion Patterns
+
+### Pattern 1: Divide and Conquer
+
+Break problem into smaller subproblems!
+
+```javascript
+// Binary search (recursive)
+function binarySearch(arr, target, left = 0, right = arr.length - 1) {
+  // Base case: not found
+  if (left > right) {
+    return -1;
+  }
+
+  const mid = Math.floor((left + right) / 2);
+
+  // Found it!
+  if (arr[mid] === target) {
+    return mid;
+  }
+
+  // Recursive cases
+  if (arr[mid] > target) {
+    return binarySearch(arr, target, left, mid - 1); // Search left half
+  } else {
+    return binarySearch(arr, target, mid + 1, right); // Search right half
+  }
+}
+
+const numbers = [1, 3, 5, 7, 9, 11, 13, 15];
+console.log(binarySearch(numbers, 7)); // 3
+```
+
+### Pattern 2: Backtracking
+
+Try all possibilities, backtrack if wrong!
+
+```javascript
+// Generate all permutations
+function permutations(arr) {
+  const result = [];
+
+  function backtrack(current, remaining) {
+    // Base case: no more elements
+    if (remaining.length === 0) {
+      result.push([...current]);
+      return;
+    }
+
+    // Try each remaining element
+    for (let i = 0; i < remaining.length; i++) {
+      current.push(remaining[i]);
+      const newRemaining = [
+        ...remaining.slice(0, i),
+        ...remaining.slice(i + 1),
+      ];
+      backtrack(current, newRemaining);
+      current.pop(); // Backtrack!
+    }
+  }
+
+  backtrack([], arr);
+  return result;
+}
+
+console.log(permutations([1, 2, 3]));
+// [[1,2,3], [1,3,2], [2,1,3], [2,3,1], [3,1,2], [3,2,1]]
+```
+
+### Pattern 3: Memoization (Optimization!)
+
+Remember previous results to avoid recalculation!
+
+```javascript
+// Fibonacci with memoization
+function fibonacciMemo(n, memo = {}) {
+  // Check memo first
+  if (n in memo) {
+    return memo[n];
+  }
+
+  // Base cases
+  if (n === 0) return 0;
+  if (n === 1) return 1;
+
+  // Calculate and store in memo
+  memo[n] = fibonacciMemo(n - 1, memo) + fibonacciMemo(n - 2, memo);
+  return memo[n];
+}
+
+console.log(fibonacciMemo(50)); // Super fast! ⚡
+// Without memo, fibonacci(50) would take forever!
+```
+
+## Practice Challenges! 🎮
+
+### Challenge 1: Count Down and Up
+
+Print numbers counting down then back up!
+
+```javascript
+function countDownUp(n) {
+  // Your code here!
+}
+
+countDownUp(3);
+// Output:
+// 3
+// 2
+// 1
+// 0
+// 1
+// 2
+// 3
+```
+
+<details>
+<summary>Click to see the answer!</summary>
+
+```javascript
+function countDownUp(n) {
+  if (n < 0) return;
+
+  console.log(n); // Print going down
+  countDownUp(n - 1); // Recurse
+  console.log(n); // Print going up
+}
+```
+
+</details>
+
+### Challenge 2: Flatten Array
+
+Flatten a nested array!
+
+```javascript
+function flatten(arr) {
+  // Your code here!
+}
+
+console.log(flatten([1, [2, [3, 4], 5], 6]));
+// [1, 2, 3, 4, 5, 6]
+```
+
+<details>
+<summary>Click to see the answer!</summary>
+
+```javascript
+function flatten(arr) {
+  const result = [];
+
+  for (let item of arr) {
+    if (Array.isArray(item)) {
+      result.push(...flatten(item)); // Recursive!
+    } else {
+      result.push(item);
+    }
+  }
+
+  return result;
+}
+
+// Or shorter:
+function flatten(arr) {
+  return arr.reduce(
+    (acc, item) =>
+      Array.isArray(item) ? [...acc, ...flatten(item)] : [...acc, item],
+    []
+  );
+}
+```
+
+</details>
+
+### Challenge 3: Range Sum
+
+Sum all numbers from start to end!
+
+```javascript
+function rangeSum(start, end) {
+  // Your code here!
+}
+
+console.log(rangeSum(1, 5)); // 15 (1+2+3+4+5)
+```
+
+<details>
+<summary>Click to see the answer!</summary>
+
+```javascript
+function rangeSum(start, end) {
+  // Base case
+  if (start === end) {
+    return start;
+  }
+
+  // Recursive case
+  return start + rangeSum(start + 1, end);
+}
+```
+
+</details>
+
+## Recursion vs Iteration
+
+| Feature         | Recursion           | Iteration        |
+| --------------- | ------------------- | ---------------- |
+| **Readability** | Often cleaner       | Can be verbose   |
+| **Memory**      | Uses call stack     | Uses less memory |
+| **Performance** | Can be slower       | Usually faster   |
+| **Use When**    | Tree/graph problems | Simple loops     |
+
+**Example: Factorial**
+
+```javascript
+// Recursive (elegant!)
+function factorialRec(n) {
+  if (n <= 1) return 1;
+  return n * factorialRec(n - 1);
+}
+
+// Iterative (efficient!)
+function factorialIter(n) {
+  let result = 1;
+  for (let i = 2; i <= n; i++) {
+    result *= i;
+  }
+  return result;
+}
+```
+
+## Common Mistakes to Avoid! ⚠️
+
+### Mistake 1: No Base Case
+
+```javascript
+// ❌ Wrong - infinite recursion!
+function countdown(n) {
+  console.log(n);
+  countdown(n - 1); // Never stops!
+}
+
+// ✅ Right - has base case
+function countdown(n) {
+  if (n < 0) return; // Base case!
+  console.log(n);
+  countdown(n - 1);
+}
+```
+
+### Mistake 2: Wrong Base Case
+
+```javascript
+// ❌ Wrong - base case never reached!
+function countdown(n) {
+  if (n === 0) return;
+  console.log(n);
+  countdown(n - 2); // Skips 0 if n is odd!
+}
+
+// ✅ Right - covers all cases
+function countdown(n) {
+  if (n <= 0) return; // Handles 0 and negatives
+  console.log(n);
+  countdown(n - 1);
+}
+```
+
+### Mistake 3: Not Making Problem Smaller
+
+```javascript
+// ❌ Wrong - problem doesn't get smaller!
+function sum(n) {
+  if (n === 0) return 0;
+  return n + sum(n); // Same problem!
+}
+
+// ✅ Right - problem gets smaller
+function sum(n) {
+  if (n === 0) return 0;
+  return n + sum(n - 1); // Smaller problem!
+}
+```
+
+## When to Use Recursion
+
+**✅ Use Recursion When:**
+
+- Working with trees or graphs
+- Problem has recursive structure (Fibonacci, factorial)
+- Backtracking problems (permutations, combinations)
+- Divide and conquer (binary search, merge sort)
+
+**❌ Avoid Recursion When:**
+
+- Simple iteration works fine
+- Deep recursion (stack overflow risk)
+- Performance is critical
+- Memory is limited
+
+## Key Takeaways! 🎯
+
+1. **Recursion = function calls itself**
+2. **Always need base case** - When to stop
+3. **Make problem smaller** - Each call should be simpler
+4. **Uses call stack** - Can run out of memory
+5. **Great for trees** - Natural fit for hierarchical data
+6. **Memoization helps** - Cache results for speed
+
+## Quick Reference Card 📋
+
+```javascript
+// Basic Template
+function recursive(input) {
+  // Base case - when to stop
+  if (baseCondition) {
+    return baseValue;
+  }
+
+  // Recursive case - call yourself with smaller problem
+  return someOperation(recursive(smallerInput));
+}
+
+// Common Patterns
+factorial(n); // n * factorial(n-1)
+fibonacci(n); // fib(n-1) + fib(n-2)
+sumArray(arr); // arr[0] + sumArray(rest)
+reverseString(str); // lastChar + reverse(rest)
+treeHeight(node); // 1 + max(left, right)
+
+// With Memoization
+function fib(n, memo = {}) {
+  if (n in memo) return memo[n];
+  if (n <= 1) return n;
+  memo[n] = fib(n - 1, memo) + fib(n - 2, memo);
+  return memo[n];
+}
+```
+
+## What's Next?
+
+In the final episode, we'll learn about **Two Pointers & Sliding Window** - powerful techniques for solving array problems efficiently!
+
+We'll cover:
+
+- Two pointers technique
+- Sliding window pattern
+- When to use each
+- Common interview problems
+
+---
+
+_This is Episode 9 of the "Mastering DSA with JavaScript" series._
+
+**Previous Episode:** [Trees & BST →](./08-trees-bst)
+
+**Next Episode:** Two Pointers & Sliding Window - Efficient Array Techniques! →
+
+**Questions?** Drop a comment below! 💬

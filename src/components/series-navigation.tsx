@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ChevronLeft, ChevronRight, PlayCircle } from "lucide-react";
+import { ChevronLeft, ChevronRight, CirclePlay } from "lucide-react";
 import type { SeriesInfo } from "@/lib/series";
 
 interface SeriesNavigationProps {
@@ -99,7 +99,7 @@ export function CompactSeriesNavigation({ seriesInfo }: CompactSeriesNavigationP
     <div className="flex items-center justify-between gap-4 p-4 bg-muted/30 rounded-lg border border-border/50">
       {/* Series Info */}
       <div className="flex items-center gap-2 flex-1 min-w-0">
-        <PlayCircle className="h-4 w-4 text-primary shrink-0" />
+        <CirclePlay className="h-4 w-4 text-primary shrink-0" />
         <span className="text-sm font-medium text-muted-foreground truncate">
           {title}
         </span>
