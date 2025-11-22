@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, Clock, Calendar } from "lucide-react";
+import { ArrowRight, Clock3, CalendarDays } from "lucide-react";
 
 // Plain object interface for client components
 interface BlogPostData {
@@ -163,13 +163,13 @@ const PostSuggestions = ({
                     dateTime={post?.date?.toString()}
                     className="flex items-center gap-1"
                   >
-                    <Calendar className="h-3 w-3" />
+                    <CalendarDays className="h-3 w-3" />
                     {formatDate(post?.date || new Date())}
                   </time>
 
                   {post?.readingTime && (
                     <span className="flex items-center gap-1">
-                      <Clock className="h-3 w-3" />
+                      <Clock3 className="h-3 w-3" />
                       {post.readingTime}
                     </span>
                   )}

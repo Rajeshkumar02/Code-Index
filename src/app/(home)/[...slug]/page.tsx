@@ -8,6 +8,9 @@ import PostSuggestions from "@/components/post-suggestions";
 import SeriesPlaylist from "@/components/series-playlist";
 import SeriesNavigation from "@/components/series-navigation";
 import { getSeriesInfo } from "@/lib/series";
+import ReadingProgress from "@/components/reading-progress";
+import ScrollToTop from "@/components/scroll-to-top";
+import ArticleTitleSetter from "@/components/article-title-setter";
 
 // Convert MDX page data to plain objects for client components
 function convertToPlainData(post: any) {
@@ -55,11 +58,17 @@ export default async function Page(props: {
 
     return (
       <>
+        {/* Set Navbar Title */}
+        <ArticleTitleSetter title={page?.data?.title ?? "Untitled"} />
+
         {/* Structured Data */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
         />
+
+        <ReadingProgress />
+        <ScrollToTop />
 
         {/* Article Header Section */}
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-6">

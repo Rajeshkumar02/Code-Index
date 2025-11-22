@@ -2,7 +2,7 @@ import { source } from "@/lib/source";
 import { notFound } from "next/navigation";
 import BlogCard from "@/components/blog-card";
 import Link from "next/link";
-import { ArrowLeft, Tag } from "lucide-react";
+import { ChevronLeft, FolderOpen } from "lucide-react";
 import { formatCategoryName, safeEncodeURIComponent } from "@/lib/blog-utils";
 
 interface CategoryPageProps {
@@ -65,7 +65,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
             href="/"
             className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
           >
-            <ArrowLeft className="h-4 w-4" />
+            <ChevronLeft className="h-4 w-4" />
             Back to Home
           </Link>
         </div>
@@ -77,7 +77,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
           <div className="flex items-center gap-6 mb-6">
             {/* Category Icon */}
             <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-primary/20 via-primary/10 to-transparent border-2 border-primary/20 flex items-center justify-center">
-              <Tag className="h-7 w-7 text-primary" />
+              <FolderOpen className="h-7 w-7 text-primary" />
             </div>
 
             {/* Category Info */}

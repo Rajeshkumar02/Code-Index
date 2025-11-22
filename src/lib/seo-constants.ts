@@ -41,6 +41,7 @@ export const SITE_CONFIG = {
   image: "/og-image.png", // Default OG image
   locale: "en_US",
   type: "website",
+  email: "dev.rajeshkumars@gmail.com"
 };
 
 // ============ BLOG CATEGORIES ============
