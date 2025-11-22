@@ -1,0 +1,713 @@
+---
+title: "Trees & Binary Search Trees - Hierarchical Data Structures! 🌳"
+description: "Master Trees and BSTs with simple explanations! Learn tree terminology, how to implement BSTs, traversal methods, and solve real interview problems."
+date: 2024-11-29
+author: "Code Index"
+category: "dsa"
+tags:
+  [
+    "javascript",
+    "trees",
+    "bst",
+    "binary-search-tree",
+    "data-structures",
+    "dsa",
+    "tutorial",
+    "interview-prep",
+  ]
+featured: true
+image: "/images/trees-bst.jpg"
+readingTime: "17 min read"
+series: "dsa-javascript"
+seriesOrder: 8
+---
+
+# Trees & Binary Search Trees - Hierarchical Data! 🌳
+
+## A Story to Start With...
+
+Imagine your family tree:
+
+```
+        Grandpa
+       /       \
+    Dad         Uncle
+   /   \          \
+ You   Sister    Cousin
+```
+
+This is a **tree structure**! Each person can have children, and those children can have their own children. This is exactly how tree data structures work! 🎯
+
+## What is a Tree? (The Super Simple Version)
+
+A tree is like an **upside-down real tree**:
+
+```
+       Root (top)
+      /    \
+   Branch  Branch
+   /  \      \
+ Leaf Leaf   Leaf (bottom)
+```
+
+**Tree Terminology:**
+
+- **Root** - The top node (like Grandpa)
+- **Parent** - Node with children (like Dad)
+- **Child** - Node below a parent (like You)
+- **Leaf** - Node with no children (like You, Sister, Cousin)
+- **Siblings** - Nodes with same parent (like You and Sister)
+- **Height** - Longest path from root to leaf
+- **Depth** - Distance from root to a node
+
+## Real Tree Example
+
+```javascript
+class TreeNode {
+  constructor(value) {
+    this.value = value;
+    this.children = [];
+  }
+
+  addChild(child) {
+    this.children.push(child);
+  }
+}
+
+// Build a family tree
+const grandpa = new TreeNode("Grandpa");
+const dad = new TreeNode("Dad");
+const uncle = new TreeNode("Uncle");
+const you = new TreeNode("You");
+const sister = new TreeNode("Sister");
+const cousin = new TreeNode("Cousin");
+
+grandpa.addChild(dad);
+grandpa.addChild(uncle);
+dad.addChild(you);
+dad.addChild(sister);
+uncle.addChild(cousin);
+
+console.log(grandpa);
+```
+
+## Binary Tree - Maximum 2 Children!
+
+A **binary tree** is a special tree where each node can have **at most 2 children**:
+
+```
+       10
+      /  \
+     5    15
+    / \   / \
+   3   7 12  20
+```
+
+```javascript
+class BinaryTreeNode {
+  constructor(value) {
+    this.value = value;
+    this.left = null; // Left child
+    this.right = null; // Right child
+  }
+}
+
+// Create nodes
+const root = new BinaryTreeNode(10);
+root.left = new BinaryTreeNode(5);
+root.right = new BinaryTreeNode(15);
+root.left.left = new BinaryTreeNode(3);
+root.left.right = new BinaryTreeNode(7);
+```
+
+## Binary Search Tree (BST) - The Smart Tree! 🧠
+
+A **BST** has a special rule:
+
+- **Left child** < **Parent**
+- **Right child** > **Parent**
+
+```
+       10
+      /  \
+     5    15      ← All left values < 10
+    / \   / \     ← All right values > 10
+   3   7 12  20
+```
+
+This makes searching super fast! Like a phone book where you can skip half the pages each time!
+
+## Implementing a Binary Search Tree
+
+```javascript
+class BST {
+  constructor() {
+    this.root = null;
+  }
+
+  // Insert a value
+  insert(value) {
+    const newNode = new BinaryTreeNode(value);
+
+    if (!this.root) {
+      this.root = newNode;
+      return this;
+    }
+
+    let current = this.root;
+
+    while (true) {
+      // Duplicate value
+      if (value === current.value) return undefined;
+
+      // Go left
+      if (value < current.value) {
+        if (!current.left) {
+          current.left = newNode;
+          return this;
+        }
+        current = current.left;
+      }
+      // Go right
+      else {
+        if (!current.right) {
+          current.right = newNode;
+          return this;
+        }
+        current = current.right;
+      }
+    }
+  }
+
+  // Search for a value
+  find(value) {
+    if (!this.root) return false;
+
+    let current = this.root;
+
+    while (current) {
+      if (value === current.value) {
+        return true; // Found it!
+      }
+
+      if (value < current.value) {
+        current = current.left; // Go left
+      } else {
+        current = current.right; // Go right
+      }
+    }
+
+    return false; // Not found
+  }
+
+  // Find minimum value
+  findMin() {
+    if (!this.root) return null;
+
+    let current = this.root;
+
+    // Keep going left!
+    while (current.left) {
+      current = current.left;
+    }
+
+    return current.value;
+  }
+
+  // Find maximum value
+  findMax() {
+    if (!this.root) return null;
+
+    let current = this.root;
+
+    // Keep going right!
+    while (current.right) {
+      current = current.right;
+    }
+
+    return current.value;
+  }
+}
+
+// Let's use it!
+const bst = new BST();
+bst.insert(10);
+bst.insert(5);
+bst.insert(15);
+bst.insert(3);
+bst.insert(7);
+bst.insert(12);
+bst.insert(20);
+
+console.log(bst.find(7)); // true
+console.log(bst.find(100)); // false
+console.log(bst.findMin()); // 3
+console.log(bst.findMax()); // 20
+```
+
+## Tree Traversal - Visiting Every Node
+
+There are different ways to visit all nodes in a tree!
+
+### 1. Depth-First Search (DFS)
+
+Go deep before going wide!
+
+#### In-Order Traversal (Left → Root → Right)
+
+```javascript
+function inOrder(node, result = []) {
+  if (node) {
+    inOrder(node.left, result); // Visit left
+    result.push(node.value); // Visit root
+    inOrder(node.right, result); // Visit right
+  }
+  return result;
+}
+
+// For BST, this gives sorted order!
+//        10
+//       /  \
+//      5    15
+//     / \   / \
+//    3   7 12  20
+// Result: [3, 5, 7, 10, 12, 15, 20] ← Sorted!
+```
+
+#### Pre-Order Traversal (Root → Left → Right)
+
+```javascript
+function preOrder(node, result = []) {
+  if (node) {
+    result.push(node.value); // Visit root
+    preOrder(node.left, result); // Visit left
+    preOrder(node.right, result); // Visit right
+  }
+  return result;
+}
+
+// Result: [10, 5, 3, 7, 15, 12, 20]
+// Good for copying a tree!
+```
+
+#### Post-Order Traversal (Left → Right → Root)
+
+```javascript
+function postOrder(node, result = []) {
+  if (node) {
+    postOrder(node.left, result); // Visit left
+    postOrder(node.right, result); // Visit right
+    result.push(node.value); // Visit root
+  }
+  return result;
+}
+
+// Result: [3, 7, 5, 12, 20, 15, 10]
+// Good for deleting a tree!
+```
+
+### 2. Breadth-First Search (BFS)
+
+Go wide before going deep! Visit level by level!
+
+```javascript
+function levelOrder(root) {
+  if (!root) return [];
+
+  const result = [];
+  const queue = [root];
+
+  while (queue.length > 0) {
+    const node = queue.shift();
+    result.push(node.value);
+
+    if (node.left) queue.push(node.left);
+    if (node.right) queue.push(node.right);
+  }
+
+  return result;
+}
+
+//        10
+//       /  \
+//      5    15
+//     / \   / \
+//    3   7 12  20
+// Result: [10, 5, 15, 3, 7, 12, 20]
+// Level 1: 10
+// Level 2: 5, 15
+// Level 3: 3, 7, 12, 20
+```
+
+## Real-World Examples
+
+### 1. File System
+
+```javascript
+class FileNode {
+  constructor(name, isFolder = false) {
+    this.name = name;
+    this.isFolder = isFolder;
+    this.children = [];
+  }
+
+  addChild(child) {
+    if (this.isFolder) {
+      this.children.push(child);
+    }
+  }
+}
+
+// Build file system
+const root = new FileNode("C:", true);
+const documents = new FileNode("Documents", true);
+const pictures = new FileNode("Pictures", true);
+const file1 = new FileNode("resume.pdf");
+const file2 = new FileNode("photo.jpg");
+
+root.addChild(documents);
+root.addChild(pictures);
+documents.addChild(file1);
+pictures.addChild(file2);
+```
+
+### 2. Organization Chart
+
+```javascript
+class Employee {
+  constructor(name, role) {
+    this.name = name;
+    this.role = role;
+    this.reports = []; // Direct reports
+  }
+
+  addReport(employee) {
+    this.reports.push(employee);
+  }
+}
+
+const ceo = new Employee("Alice", "CEO");
+const cto = new Employee("Bob", "CTO");
+const cfo = new Employee("Charlie", "CFO");
+const dev1 = new Employee("David", "Developer");
+const dev2 = new Employee("Eve", "Developer");
+
+ceo.addReport(cto);
+ceo.addReport(cfo);
+cto.addReport(dev1);
+cto.addReport(dev2);
+```
+
+## Common Tree Patterns
+
+### Pattern 1: Maximum Depth
+
+```javascript
+function maxDepth(root) {
+  if (!root) return 0;
+
+  const leftDepth = maxDepth(root.left);
+  const rightDepth = maxDepth(root.right);
+
+  return Math.max(leftDepth, rightDepth) + 1;
+}
+
+//        10
+//       /  \
+//      5    15
+//     / \
+//    3   7
+// Max depth: 3
+```
+
+### Pattern 2: Is Valid BST
+
+```javascript
+function isValidBST(root, min = -Infinity, max = Infinity) {
+  if (!root) return true;
+
+  // Check current node
+  if (root.value <= min || root.value >= max) {
+    return false;
+  }
+
+  // Check left and right subtrees
+  return (
+    isValidBST(root.left, min, root.value) &&
+    isValidBST(root.right, root.value, max)
+  );
+}
+```
+
+### Pattern 3: Lowest Common Ancestor
+
+```javascript
+function lowestCommonAncestor(root, p, q) {
+  if (!root) return null;
+
+  // If both are smaller, go left
+  if (p < root.value && q < root.value) {
+    return lowestCommonAncestor(root.left, p, q);
+  }
+
+  // If both are larger, go right
+  if (p > root.value && q > root.value) {
+    return lowestCommonAncestor(root.right, p, q);
+  }
+
+  // Found the split point!
+  return root;
+}
+```
+
+### Pattern 4: Path Sum
+
+```javascript
+function hasPathSum(root, target) {
+  if (!root) return false;
+
+  // Leaf node - check if sum matches
+  if (!root.left && !root.right) {
+    return root.value === target;
+  }
+
+  // Check left and right paths
+  const remaining = target - root.value;
+  return hasPathSum(root.left, remaining) || hasPathSum(root.right, remaining);
+}
+```
+
+### Pattern 5: Invert Binary Tree
+
+```javascript
+function invertTree(root) {
+  if (!root) return null;
+
+  // Swap left and right
+  [root.left, root.right] = [root.right, root.left];
+
+  // Recursively invert subtrees
+  invertTree(root.left);
+  invertTree(root.right);
+
+  return root;
+}
+
+// Before:      After:
+//     10          10
+//    /  \        /  \
+//   5   15      15   5
+```
+
+## Practice Challenges! 🎮
+
+### Challenge 1: Same Tree
+
+Check if two trees are identical!
+
+```javascript
+function isSameTree(p, q) {
+  // Your code here!
+}
+
+// Example:
+// Tree 1:  1      Tree 2:  1
+//         / \              / \
+//        2   3            2   3
+// Result: true
+```
+
+<details>
+<summary>Click to see the answer!</summary>
+
+```javascript
+function isSameTree(p, q) {
+  // Both null
+  if (!p && !q) return true;
+
+  // One null, one not
+  if (!p || !q) return false;
+
+  // Values different
+  if (p.value !== q.value) return false;
+
+  // Check left and right subtrees
+  return isSameTree(p.left, q.left) && isSameTree(p.right, q.right);
+}
+```
+
+</details>
+
+### Challenge 2: Symmetric Tree
+
+Check if a tree is a mirror of itself!
+
+```javascript
+function isSymmetric(root) {
+  // Your code here!
+}
+
+// Example:
+//       1
+//      / \
+//     2   2
+//    / \ / \
+//   3  4 4  3
+// Result: true
+```
+
+<details>
+<summary>Click to see the answer!</summary>
+
+```javascript
+function isSymmetric(root) {
+  function isMirror(left, right) {
+    if (!left && !right) return true;
+    if (!left || !right) return false;
+
+    return (
+      left.value === right.value &&
+      isMirror(left.left, right.right) &&
+      isMirror(left.right, right.left)
+    );
+  }
+
+  return isMirror(root.left, root.right);
+}
+```
+
+</details>
+
+### Challenge 3: Count Nodes
+
+Count total number of nodes in a tree!
+
+```javascript
+function countNodes(root) {
+  // Your code here!
+}
+
+// Example:
+//       1
+//      / \
+//     2   3
+//    / \
+//   4   5
+// Result: 5
+```
+
+<details>
+<summary>Click to see the answer!</summary>
+
+```javascript
+function countNodes(root) {
+  if (!root) return 0;
+
+  return 1 + countNodes(root.left) + countNodes(root.right);
+}
+```
+
+</details>
+
+## Time Complexity
+
+| Operation   | BST (Balanced) | BST (Worst) | Array |
+| ----------- | -------------- | ----------- | ----- |
+| **Search**  | O(log n)       | O(n)        | O(n)  |
+| **Insert**  | O(log n)       | O(n)        | O(n)  |
+| **Delete**  | O(log n)       | O(n)        | O(n)  |
+| **Min/Max** | O(log n)       | O(n)        | O(1)  |
+
+**Note:** Worst case happens when tree becomes a linked list!
+
+## Balanced vs Unbalanced Trees
+
+### Balanced Tree (Good! ✅)
+
+```
+       10
+      /  \
+     5    15
+    / \   / \
+   3   7 12  20
+```
+
+Height: 3, Operations: O(log n)
+
+### Unbalanced Tree (Bad! ❌)
+
+```
+1
+ \
+  2
+   \
+    3
+     \
+      4
+       \
+        5
+```
+
+Height: 5, Operations: O(n) - Like a linked list!
+
+## Key Takeaways! 🎯
+
+1. **Trees are hierarchical** - Parent-child relationships
+2. **Binary trees** - Max 2 children per node
+3. **BST rule** - Left < Parent < Right
+4. **BST is fast** - O(log n) for balanced trees
+5. **Many traversal methods** - In-order, pre-order, post-order, level-order
+6. **Balance matters** - Unbalanced trees are slow!
+
+## Quick Reference Card 📋
+
+```javascript
+// Node
+class BinaryTreeNode {
+  constructor(value) {
+    this.value = value;
+    this.left = null;
+    this.right = null;
+  }
+}
+
+// BST Operations
+bst.insert(value); // Add value
+bst.find(value); // Search
+bst.findMin(); // Minimum
+bst.findMax(); // Maximum
+
+// Traversals
+inOrder(root); // Left → Root → Right (sorted!)
+preOrder(root); // Root → Left → Right
+postOrder(root); // Left → Right → Root
+levelOrder(root); // Level by level (BFS)
+
+// Common Patterns
+maxDepth(root); // Find height
+isValidBST(root); // Validate BST
+invertTree(root); // Mirror tree
+hasPathSum(root, sum); // Check path
+```
+
+## What's Next?
+
+In the next episode, we'll learn about **Recursion** - a powerful technique where functions call themselves!
+
+We'll cover:
+
+- What recursion is
+- Base cases and recursive cases
+- Common recursion patterns
+- How to think recursively
+- Interview problems
+
+---
+
+_This is Episode 8 of the "Mastering DSA with JavaScript" series._
+
+**Previous Episode:** [Linked Lists →](./07-linked-lists)
+
+**Next Episode:** Recursion - Functions Calling Themselves! →
+
+**Questions?** Drop a comment below! 💬
