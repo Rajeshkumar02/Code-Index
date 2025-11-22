@@ -12,6 +12,7 @@ import ReadingProgress from "@/components/reading-progress";
 import ScrollToTop from "@/components/scroll-to-top";
 import ArticleTitleSetter from "@/components/article-title-setter";
 import ViewCounter from "@/components/view-counter";
+import BlogImageFallback from "@/components/blog-image-fallback";
 // import ReactionButtons from "@/components/reaction-buttons";
 
 // Convert MDX page data to plain objects for client components
@@ -140,17 +141,14 @@ export default async function Page(props: {
         </div>
 
         {/* Cover Image Section */}
-        {page?.data?.image && (
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
-            <div className="relative w-full aspect-video overflow-hidden rounded-lg">
-              <img
-                src={page.data.image as string}
-                alt={page?.data?.title ?? ""}
-                className="w-full h-full object-cover object-center"
-              />
-            </div>
-          </div>
-        )}
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
+          <BlogImageFallback
+            src={page?.data?.image as string | undefined}
+            alt={page?.data?.title ?? ""}
+            title={page?.data?.title ?? ""}
+            className="w-full aspect-video"
+          />
+        </div>
 
         <article className="container mx-auto px-4 py-12">
           {/* Main Content with Optimal Reading Width */}

@@ -5,6 +5,7 @@ import Image from "next/image";
 import { CalendarDays, Clock3, CircleUser, ArrowUpRight } from "lucide-react";
 import { formatDate, safeEncodeURIComponent } from "@/lib/blog-utils";
 import { useRouter } from "next/navigation";
+import BlogImageFallback from "@/components/blog-image-fallback";
 
 // Plain object interface for client components
 interface BlogPostData {
@@ -110,27 +111,12 @@ const BlogCard = ({
           <div className="relative overflow-hidden rounded-2xl bg-card border border-border hover:border-border/60 transition-all duration-300">
             {/* Image Section */}
             <div className="aspect-video sm:aspect-2/1 relative overflow-hidden">
-              {post.image ? (
-                <Image
-                  src={post.image}
-                  alt={post.title || "Featured article"}
-                  fill
-                  priority={priority}
-                  className="object-cover transition-transform duration-500 group-hover:scale-105"
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
-                />
-              ) : (
-                <div className="w-full h-full bg-linear-to-br from-primary/10 via-primary/5 to-background flex items-center justify-center">
-                  <div className="text-center">
-                    <div className="text-4xl font-bold text-primary/20 mb-2">
-                      CODE
-                    </div>
-                    <div className="text-sm text-muted-foreground uppercase tracking-wide">
-                      {categoryInfo.label}
-                    </div>
-                  </div>
-                </div>
-              )}
+              <BlogImageFallback
+                src={post.image}
+                alt={post.title || "Featured article"}
+                title={post.title}
+                className="w-full h-full"
+              />
               <div className="absolute inset-0 bg-linear-to-t from-black/50 via-black/20 to-transparent" />
 
               {/* Featured Badge */}
@@ -207,26 +193,12 @@ const BlogCard = ({
           {/* Image */}
           {!isMinimal && (
             <div className="aspect-16/10 relative overflow-hidden">
-              {post.image ? (
-                <Image
-                  src={post.image}
-                  alt={post.title || "Blog post"}
-                  fill
-                  className="object-cover transition-transform duration-300 group-hover:scale-105"
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                />
-              ) : (
-                <div className="w-full h-full bg-linear-to-br from-muted via-muted/50 to-background flex items-center justify-center">
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-muted-foreground/30 mb-1">
-                      {}
-                    </div>
-                    <div className="text-xs text-muted-foreground/60 uppercase tracking-wide">
-                      {categoryInfo.label}
-                    </div>
-                  </div>
-                </div>
-              )}
+              <BlogImageFallback
+                src={post.image}
+                alt={post.title || "Blog post"}
+                title={post.title}
+                className="w-full h-full"
+              />
             </div>
           )}
 
